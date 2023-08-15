@@ -18,12 +18,16 @@ import CreateProduct from "./pages/user/CreateProduct"
 import Products from "./pages/admin/Products"
 import UpdateProduct from "./pages/user/UpdateProduct"
 import Search from "./pages/Search"
+import ProductDetails from "./pages/ProductDetails"
+import WishList from "./pages/user/WishList"
 
 function App() {
   return (
     <>
       <Routes>
         <Route path='/' element={<Home />} />
+        <Route path='/wishlist' element={<WishList />} />
+        <Route path='/product/:slug' element={<ProductDetails />} />
         <Route path='/about' element={<About />} />
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />

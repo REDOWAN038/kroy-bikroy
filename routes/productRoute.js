@@ -11,6 +11,7 @@ const {
   productCountController,
   productListController,
   searchProductController,
+  realtedProductController,
 } = require("../controllers/productController")
 const formidable = require("express-formidable")
 const router = express.Router()
@@ -61,5 +62,8 @@ router.get("/product-list/:page", productListController)
 
 // search product
 router.get("/search/:keyword", searchProductController)
+
+//similar product
+router.get("/related-product/:pid/:cid", realtedProductController)
 
 module.exports = router

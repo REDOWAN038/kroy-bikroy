@@ -2,12 +2,17 @@ import React, { useState, useEffect } from "react"
 import Layout from "../components/Layout/Layout"
 // import { useAuth } from "../context/auth"
 import { useCategory } from "../context/CategoryContext"
-import { AiFillWarning, AiOutlineHeart } from "react-icons/ai"
+import { AiOutlineHeart } from "react-icons/ai"
 import axios from "axios"
+import { useNavigate } from "react-router-dom"
+import { useWishList } from "../context/wishlistContext"
+import { useAuth } from "../context/auth"
+import { message } from "antd"
 
 const Home = () => {
   const { selectedCategoryId, setCategory } = useCategory()
-
+  const [wishList, setWishList] = useWishList()
+  const navigate = useNavigate()
   const [products, setProducts] = useState([])
   const [min, setMin] = useState("0")
   const [max, setMax] = useState("100000")
@@ -15,6 +20,7 @@ const Home = () => {
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(false)
+  const [auth] = useAuth()
   //const [categories, setCategories] = useState([])
 
   const getAllProducts = async () => {
@@ -75,6 +81,27 @@ const Home = () => {
     loadMore()
     // eslint-disable-next-line
   }, [page])
+
+  const addToWishList = async (p) => {
+    let existingWishListItem = localStorage.getItem("wishlist")
+    existingWishListItem = JSON.parse(existingWishListItem)
+
+    if (wishList.length === 0) {
+      setWishList([...wishList, p])
+      localStorage.setItem("wishlist", JSON.stringify([...wishList, p]))
+      message.success("Item Added to Wishlist")
+      return
+    }
+
+    if (wishList.includes(p)) {
+      message.warning("already in the wishlist")
+    } else {
+      setWishList([...wishList, p])
+      localStorage.setItem("wishlist", JSON.stringify([...wishList, p]))
+      message.success("Item Added to Wishlist")
+      //console.log(wishList)
+    }
+  }
 
   const filterProducts = async () => {
     try {
@@ -166,7 +193,10 @@ const Home = () => {
                 style={{ width: "20rem" }}
                 key={p._id}
               >
-                <div className='product-card-img'>
+                <div
+                  className='product-card-img'
+                  onClick={() => navigate(`/product/${p.slug}`)}
+                >
                   <div className='product-img'>
                     <img
                       src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`}
@@ -177,13 +207,36 @@ const Home = () => {
                   </div>
                 </div>
 
-                <div className='product-card-details'>
+                <div
+                  className='product-card-details'
+                  onClick={() => navigate(`/product/${p.slug}`)}
+                >
                   <div className='product-card-details-row'>
                     <h5 className='product-name'>{p.name}</h5>
                     <h5 className='product-price'>{p.price} tk</h5>
                   </div>
                 </div>
-                <p className='product-address'>{p.address}</p>
+                <div className='product-card-details'>
+                  <div className='product-card-details-row'>
+                    <p
+                      className='product-address'
+                      onClick={() => navigate(`/product/${p.slug}`)}
+                    >
+                      {p.address}
+                    </p>
+                    <button className='wishlist-icon'>
+                      <AiOutlineHeart
+                        onClick={() => {
+                          if (auth.user) {
+                            addToWishList(p)
+                          } else {
+                            message.error("Please Login First")
+                          }
+                        }}
+                      />
+                    </button>
+                  </div>
+                </div>
               </div>
             ))}
           </div>

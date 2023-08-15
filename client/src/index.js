@@ -7,6 +7,7 @@ import { BrowserRouter } from "react-router-dom"
 import { AuthProvider } from "./context/auth"
 import { CategoryProvider } from "./context/CategoryContext"
 import { SearchProvider } from "./context/SearchContext"
+import { WishListProvider } from "./context/wishlistContext"
 import "antd/dist/reset.css"
 
 const root = ReactDOM.createRoot(document.getElementById("root"))
@@ -14,9 +15,11 @@ root.render(
   <AuthProvider>
     <CategoryProvider>
       <SearchProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <WishListProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </WishListProvider>
       </SearchProvider>
     </CategoryProvider>
   </AuthProvider>

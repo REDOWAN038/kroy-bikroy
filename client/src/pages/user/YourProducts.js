@@ -10,12 +10,17 @@ const YourProducts = () => {
   const [auth] = useAuth()
   const [products, setProducts] = useState([])
   const navigate = useNavigate()
+  const [total, setTotal] = useState(0)
+  const [page, setPage] = useState(1)
+  const [loading, setLoading] = useState(false)
 
   const getAllProducts = async () => {
     try {
+      setLoading(true)
       const res = await axios.get(
-        `${process.env.REACT_APP_API}/api/v1/product/get-products`
+        `${process.env.REACT_APP_API}/api/v1/product/product-list/${page}`
       )
+      setLoading(false)
       if (res?.data.success) {
         let yourProducts = []
         const getProducts = res?.data.products
@@ -28,13 +33,57 @@ const YourProducts = () => {
         setProducts(yourProducts)
       }
     } catch (error) {
+      setLoading(false)
       console.log(error)
     }
   }
 
   useEffect(() => {
     getAllProducts()
+    // eslint-disable-next-line
   }, [])
+
+  // get total products
+  const getTotalProducts = async () => {
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_API}/api/v1/product/product-count`
+      )
+
+      if (res?.data.success) {
+        setTotal(res?.data.total)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    getTotalProducts()
+  }, [])
+
+  const loadMore = async () => {
+    try {
+      setLoading(true)
+      const res = await axios.get(
+        `${process.env.REACT_APP_API}/api/v1/product/product-list/${page}`
+      )
+      setLoading(false)
+
+      if (res?.data.success) {
+        setProducts([...products, ...res?.data.products])
+      }
+    } catch (error) {
+      setLoading(false)
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    if (page === 1) return
+    loadMore()
+    // eslint-disable-next-line
+  }, [page])
 
   const handleClick = async (slug) => {
     navigate(`/dashboard/user/product/${slug}`)
@@ -52,22 +101,44 @@ const YourProducts = () => {
             <div className='card-container'>
               {products.map((p) => (
                 <div
-                  className='card m-2 prouct-link'
+                  className='card product-card-body m-2'
                   style={{ width: "20rem" }}
                   key={p._id}
                   onClick={() => handleClick(p.slug)}
                 >
-                  <img
-                    src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`}
-                    className='card-img-top'
-                    alt={p.name}
-                  />
-                  <div className='card-body'>
-                    <h5 className='card-title'>{p.name}</h5>
-                    <p className='card-text'>{p.description.slice(0, 100)}</p>
+                  <div className='product-card-img'>
+                    <div className='product-img'>
+                      <img
+                        src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`}
+                        className='card-img-top'
+                        alt={p.name}
+                        style={{ height: "10rem" }}
+                      />
+                    </div>
                   </div>
+
+                  <div className='product-card-details'>
+                    <div className='product-card-details-row'>
+                      <h5 className='product-name'>{p.name}</h5>
+                      <h5 className='product-price'>{p.price} tk</h5>
+                    </div>
+                  </div>
+                  <p className='product-address'>{p.address}</p>
                 </div>
               ))}
+            </div>
+            <div className='m-2 p-3'>
+              {products && products.length < total && (
+                <button
+                  className='btn btn-warning'
+                  onClick={(e) => {
+                    e.preventDefault()
+                    setPage(page + 1)
+                  }}
+                >
+                  {loading ? "Loading..." : "Load More"}
+                </button>
+              )}
             </div>
           </div>
         </div>

@@ -602,7 +602,7 @@ form {
 
 .product-card-details-row {
   display: flex;
-  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -615,6 +615,7 @@ form {
   text-overflow: ellipsis;
   white-space: nowrap;
   margin-bottom: 5px;
+  text-transform: capitalize;
 }
 
 .product-price {
@@ -627,8 +628,24 @@ form {
 
 .product-address {
   font-size: 1em;
-  font-weight: 400;
-  color: 666;
+  color: #212121;
+  font-weight: 700;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   margin-bottom: 5px;
-  margin-left: 10px;
+}
+
+.wishlist-icon {
+  background: none;
+  outline: none;
+  border: none;
+  margin-top: -10px;
+  font-size: 30px;
+}
+
+.wishlist-icon:hover svg {
+  fill: var(--primary-color);
+  transition: fill 0.3s;
 }
