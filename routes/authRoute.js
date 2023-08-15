@@ -1,6 +1,10 @@
 const express = require("express")
 const router = express.Router()
-const { register, login } = require("../controllers/authController")
+const {
+  register,
+  login,
+  updateProfileController,
+} = require("../controllers/authController")
 const { requireSignIn, isAdmin } = require("../middlewares/authMiddleware")
 
 router.post("/register", register)
@@ -15,5 +19,8 @@ router.get("/user-auth", requireSignIn, (req, res) => {
 router.get("/admin-auth", requireSignIn, isAdmin, (req, res) => {
   res.status(200).send({ ok: true })
 })
+
+//update profile
+router.put("/profile", requireSignIn, updateProfileController)
 
 module.exports = router
