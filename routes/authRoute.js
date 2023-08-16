@@ -21,6 +21,6 @@ router.get("/admin-auth", requireSignIn, isAdmin, (req, res) => {
 })
 
 //update profile
-router.put("/profile", requireSignIn, updateProfileController)
+router.put("/update-profile", requireSignIn, updateProfileController)
 
 module.exports = router

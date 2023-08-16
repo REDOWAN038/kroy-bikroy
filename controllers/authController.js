@@ -39,7 +39,6 @@ const register = async (req, res) => {
       name,
       email,
       phone,
-
       password: hashedPassword,
     }).save()
 
