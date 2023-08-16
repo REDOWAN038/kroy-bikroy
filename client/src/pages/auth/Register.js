@@ -2,11 +2,11 @@ import React, { useEffect, useRef, useState } from "react"
 import Layout from "../../components/Layout/Layout"
 import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
-import { message } from "antd"
 
 const Register = () => {
   const emailInputRef = useRef(null)
   const passwordInputRef = useRef(null)
+  const regNoInputRef = useRef(null)
   const nameInputRef = useRef(null)
   const phoneInputRef = useRef(null)
   // const [email, setEmail] = useState("")
@@ -17,7 +17,7 @@ const Register = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    emailInputRef.current.focus()
+    regNoInputRef.current.focus()
   }, [])
 
   const handleSubmit = async (e) => {
@@ -27,11 +27,12 @@ const Register = () => {
       const password = passwordInputRef.current.value
       const name = nameInputRef.current.value
       const phone = phoneInputRef.current.value
-
+      const reg_no = regNoInputRef.current.value
       //console.log(regNo, email, name, phone, password)
       const res = await axios.post(
         `${process.env.REACT_APP_API}/api/v1/auth/register`,
         {
+          reg_no,
           email,
           name,
           phone,
@@ -39,17 +40,16 @@ const Register = () => {
         }
       )
       if (res.data.success) {
-        message.success("registration completed")
+        //toast.success(res.data.message)
         console.log("success")
         navigate("/login")
       } else {
-        message.error(res.data.message)
-
+        console.log("error")
         //toast.error(res.data.message)
       }
     } catch (error) {
       console.log(error)
-      message.error("something went wrong")
+      // toast.error("something went wrong")
     }
   }
   return (
@@ -70,7 +70,15 @@ const Register = () => {
               </Link>
             </div>
             <span>or use your account</span> */}
-
+            <input
+              type='text'
+              name='text'
+              placeholder='Registration No.'
+              ref={regNoInputRef}
+              // value={reg_no}
+              // onChange={(e) => setRegNo(e.target.value)}
+              required
+            />
             <input
               type='email'
               name='email'

@@ -5,6 +5,8 @@ import { useAuth } from "../../context/auth"
 
 const Dashboard = () => {
   const [auth] = useAuth()
+  console.log(auth);
+  
   return (
     <Layout>
       <div className='container-fluid m-3 p-3'>

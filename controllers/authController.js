@@ -4,9 +4,13 @@ const JWT = require("jsonwebtoken")
 
 const register = async (req, res) => {
   try {
-    const { email, name, phone, password } = req.body
+    const { reg_no, email, name, phone, password } = req.body
+    console.log(req.body);
 
     //validations
+    if (!reg_no) {
+      return res.send({ message: "registration number is required" })
+    }
 
     if (!name) {
       return res.send({ message: "name is required" })
@@ -39,7 +43,7 @@ const register = async (req, res) => {
       name,
       email,
       phone,
-
+      reg_no,
       password: hashedPassword,
     }).save()
 
@@ -60,7 +64,7 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    const { email, password } = req.body
+    const {email, password} = req.body;
     if (!email || !password) {
       return res.status(404).send({
         success: false,
@@ -75,20 +79,21 @@ const login = async (req, res) => {
         message: "not registered",
       })
     }
-
+    
     const match = await comparePassword(password, user.password)
-
+    
     if (!match) {
       return res.status(200).send({
         success: false,
         message: "incorrect password",
       })
     }
-
+    
     //token
     const token = await JWT.sign({ _id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     })
+
 
     res.status(200).send({
       success: true,
@@ -113,34 +118,4 @@ const login = async (req, res) => {
   }
 }
 
-const updateProfileController = async (req, res) => {
-  try {
-    const { name, email, password, phone } = req.body
-    const user = await userModel.findById(req.user._id)
-
-    const hashedPassword = password ? await hashPassword(password) : undefined
-    const updatedUser = await userModel.findByIdAndUpdate(
-      req.user._id,
-      {
-        name: name || user.name,
-        password: hashedPassword || user.password,
-        phone: phone || user.phone,
-      },
-      { new: true }
-    )
-    res.status(200).send({
-      success: true,
-      message: "Profile Updated SUccessfully",
-      updatedUser,
-    })
-  } catch (error) {
-    console.log(error)
-    res.status(400).send({
-      success: false,
-      message: "Error WHile Update profile",
-      error,
-    })
-  }
-}
-
-module.exports = { register, login, updateProfileController }
+module.exports = { register, login }

@@ -3,10 +3,13 @@ const userModel = require("../models/userModel")
 
 const requireSignIn = async (req, res, next) => {
   try {
-    const decode = JWT.verify(req.headers.authorization, process.env.JWT_SECRET)
+    const token = req.headers.authorization.split(' ')[1];
+    const decode = JWT.verify(token, process.env.JWT_SECRET)
     req.user = decode
+    console.log("HI", decode);
     next()
   } catch (error) {
+    console.log("token erro");
     console.log(error)
   }
 }

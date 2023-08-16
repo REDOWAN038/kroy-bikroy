@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react"
 import {
   AiOutlineMessage,
   AiOutlineHeart,
+  AiOutlineShoppingCart,
   AiOutlineSearch,
   AiOutlinePlusCircle,
   AiOutlineUser,
@@ -9,18 +10,18 @@ import {
 import { NavLink, Link } from "react-router-dom"
 import logo from "../../images/logo1.png"
 import Category from "./Category"
-import { useWishList } from "../../context/wishlistContext"
 import { useAuth } from "../../context/auth"
 import SearchInput from "../Form/SearchInput"
-import { message } from "antd"
-import { useNavigate } from "react-router-dom"
-import WishList from "../../pages/user/WishList"
+import { ChatState } from "../../context/chatProvider"
 
 const Header = () => {
   const [auth, setAuth] = useAuth()
-  const [wishList, setWishList] = useWishList()
   const [showOptions, setShowOptions] = useState(false)
-  const navigate = useNavigate()
+  const {
+    setSelectedChat,
+    setUser,
+    setChats,
+  } = ChatState();
 
   const handleLogout = () => {
     setAuth({
@@ -28,14 +29,16 @@ const Header = () => {
       user: null,
       token: "",
     })
-    setWishList([])
     localStorage.removeItem("auth")
-    localStorage.removeItem("wishlist")
+    setSelectedChat('');
+    setUser(null);
+    setChats([]);
   }
 
   // Example counts
-  //const cartCount = 3
+  const cartCount = 3
   const messageCount = 15
+  const wishlistCount = 2
 
   return (
     <>
@@ -65,7 +68,7 @@ const Header = () => {
             </NavLink>
           </div>
           <div className='icon'>
-            <NavLink to='/inbox' className='icon-navlink'>
+            <NavLink to='/inbox/user' className='icon-navlink'>
               <AiOutlineMessage />
             </NavLink>
             {messageCount > 0 && (
@@ -73,26 +76,19 @@ const Header = () => {
             )}
           </div>
           <div className='icon'>
-            <div className='icon-navlink'>
-              <AiOutlineHeart
-                onClick={() => {
-                  if (!auth.user) {
-                    message.error("please login to see wishlist")
-                  } else {
-                    if (wishList.length) {
-                      navigate("/wishlist")
-                    } else {
-                      message.error("your wishlist is empty")
-                    }
-                  }
-                }}
-              />
-            </div>
-            {wishList?.length > 0 && (
-              <span className='count-badge'>{wishList.length}</span>
+            <NavLink to='/wishlist' className='icon-navlink'>
+              <AiOutlineHeart />
+            </NavLink>
+            {wishlistCount > 0 && (
+              <span className='count-badge'>{wishlistCount}</span>
             )}
           </div>
-
+          <div className='icon'>
+            <NavLink to='/cart' className='icon-navlink'>
+              <AiOutlineShoppingCart />
+            </NavLink>
+            {cartCount > 0 && <span className='count-badge'>{cartCount}</span>}
+          </div>
           <div
             className='icon'
             onMouseEnter={() => setShowOptions(true)}

@@ -17,12 +17,17 @@ const Login = () => {
     emailInputRef.current.focus()
   }, [])
 
+  useEffect(() => {
+    
+    if(auth?.user?.id) navigate(-1);
+  }, [auth, navigate])
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
       const email = emailInputRef.current.value
       const password = passwordInputRef.current.value
-      //console.log(email, password)
+      // console.log(email, password)
       const res = await axios.post(
         `${process.env.REACT_APP_API}/api/v1/auth/login`,
         {
@@ -30,6 +35,7 @@ const Login = () => {
           password,
         }
       )
+      console.log(res.data);
       if (res.data.success) {
         //toast.success(res.data.message)
         setAuth({
