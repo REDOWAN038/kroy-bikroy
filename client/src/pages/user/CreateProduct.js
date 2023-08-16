@@ -5,6 +5,7 @@ import axios from "axios"
 import { Select } from "antd"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../context/auth"
+import { message } from "antd"
 const { Option } = Select
 
 const CreateProduct = () => {
@@ -16,6 +17,8 @@ const CreateProduct = () => {
   const [price, setPrice] = useState("")
   const [category, setCategory] = useState("")
   const [address, setAddress] = useState("")
+  const [sellerName, setSellerName] = useState("")
+  const [sellerId, setSellerId] = useState("")
   //const [available, setAvailable] = useState("")
   const [image, setImage] = useState("")
 
@@ -34,8 +37,20 @@ const CreateProduct = () => {
     }
   }
 
+  const getUser = () => {
+    let user = localStorage.getItem("auth")
+    user = JSON.parse(user)
+    console.log(user)
+    //console.log(user?.user?.id)
+    //console.log(user?.user?.name)
+    setSellerId(user?.user?.id)
+    setSellerName(user?.user?.name)
+  }
+
   useEffect(() => {
     getAllCategories()
+    getUser()
+    // getSeller()
   }, [])
 
   const handleCreate = async (e) => {
@@ -48,8 +63,10 @@ const CreateProduct = () => {
       productData.append("category", category)
       productData.append("address", address)
       productData.append("image", image)
-      productData.append("seller", auth.user.id)
-
+      //productData.append("sellerName", sellerName)
+      productData.append("seller", sellerId)
+      console.log(typeof sellerId)
+      console.log(typeof category)
       console.log(productData)
 
       const res = await axios.post(
@@ -59,9 +76,11 @@ const CreateProduct = () => {
 
       if (res?.data.success) {
         //navigate("/dashboard/user/your-products")
+        message.success("Item is added to sell")
         navigate("/dashboard/user/your-products")
       }
     } catch (error) {
+      message.error("something went wrong")
       console.log(error)
     }
   }

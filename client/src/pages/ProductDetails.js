@@ -3,11 +3,18 @@ import Layout from "../components/Layout/Layout"
 import axios from "axios"
 import { useParams } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
+import { useWishList } from "../context/wishlistContext"
+import { message } from "antd"
+import { useAuth } from "../context/auth"
 
 const ProductDetails = () => {
   const params = useParams()
+  const [wishList, setWishList] = useWishList()
+  const [auth] = useAuth()
+
   const [product, setProduct] = useState({})
   const [relatedProducts, setRelatedProducts] = useState([])
+  const [seller, setSeller] = useState({})
   const navigate = useNavigate()
 
   const getProduct = async () => {
@@ -16,14 +23,45 @@ const ProductDetails = () => {
         `${process.env.REACT_APP_API}/api/v1/product/get-product/${params.slug}`
       )
       setProduct(data?.product)
+      //console.log(product?.seller)
+      //console.log(data?.product?.category?._id)
+      //getSeller(JSON.parse(product?.seller))
+      getSeller(data?.product?.seller)
       getSimilarProduct(data?.product._id, data?.product.category._id)
     } catch (error) {
       console.log(error)
     }
   }
 
+  const getSeller = async (sId) => {
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_API}/api/v1/users/get-users`
+      )
+
+      const users = res?.data?.users
+      console.log(sId)
+
+      if (res?.data?.success) {
+        users.map((user) => {
+          console.log(user)
+          if (user._id === sId) {
+            //console.log("hurray")
+            setSeller(user)
+          }
+        })
+      }
+
+      //console.log(seller)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   useEffect(() => {
-    if (params?.slug) getProduct()
+    if (params?.slug) {
+      getProduct()
+    }
   }, [params?.slug])
 
   //get similar product
@@ -35,6 +73,27 @@ const ProductDetails = () => {
       setRelatedProducts(data?.products)
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  const addToWishList = async (p) => {
+    let existingWishListItem = localStorage.getItem("wishlist")
+    existingWishListItem = JSON.parse(existingWishListItem)
+
+    if (wishList.length === 0) {
+      setWishList([...wishList, p])
+      localStorage.setItem("wishlist", JSON.stringify([...wishList, p]))
+      message.success("Item Added to Wishlist")
+      return
+    }
+
+    if (wishList.includes(p)) {
+      message.warning("already in the wishlist")
+    } else {
+      setWishList([...wishList, p])
+      localStorage.setItem("wishlist", JSON.stringify([...wishList, p]))
+      message.success("Item Added to Wishlist")
+      //console.log(wishList)
     }
   }
 
@@ -57,7 +116,7 @@ const ProductDetails = () => {
           <h6>Price : {product.price}</h6>
           <h6>Category : {product?.category?.name}</h6>
           <h6>Address : {product.address}</h6>
-          <h6>Category : {product?.category?.name}</h6>
+          <h6>Seller : {seller.name}</h6>
 
           {/* <button class='btn btn-secondary ms-1'>ADD TO CART</button> */}
         </div>
@@ -68,32 +127,45 @@ const ProductDetails = () => {
         {relatedProducts.length < 1 && (
           <h3 className='text-center'>No Similar Products Found</h3>
         )}
-        <div className='card-container'>
+        <div className='carousel'>
           {relatedProducts.map((p) => (
-            <div
-              className='card product-card-body m-2'
-              style={{ width: "20rem" }}
-              key={p._id}
-              onClick={() => navigate(`/product/${p.slug}`)}
-            >
-              <div className='product-card-img'>
-                <div className='product-img'>
+            <div className='item' key={p._id}>
+              <div className='thumb-wrapper'>
+                <div
+                  className='img-box'
+                  onClick={() => navigate(`/product/${p.slug}`)}
+                >
                   <img
                     src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`}
-                    className='card-img-top'
-                    alt={p.name}
-                    style={{ height: "10rem" }}
+                    className='img-fluid'
+                    alt='Play Station'
                   />
                 </div>
-              </div>
+                <div className='thumb-content'>
+                  <h4 onClick={() => navigate(`/product/${p.slug}`)}>
+                    {p.name}
+                  </h4>
+                  <p
+                    className='item-price'
+                    onClick={() => navigate(`/product/${p.slug}`)}
+                  >
+                    <span>{p.price} tk</span>
+                  </p>
 
-              <div className='product-card-details'>
-                <div className='product-card-details-row'>
-                  <h5 className='product-name'>{p.name}</h5>
-                  <h5 className='product-price'>{p.price} tk</h5>
+                  <div
+                    className='btn btn-primary'
+                    onClick={() => {
+                      if (auth.user) {
+                        addToWishList(p)
+                      } else {
+                        message.error("Please Login First")
+                      }
+                    }}
+                  >
+                    Add to Wishlist
+                  </div>
                 </div>
               </div>
-              <p className='product-address'>{p.address}</p>
             </div>
           ))}
         </div>

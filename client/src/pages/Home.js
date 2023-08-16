@@ -186,8 +186,50 @@ const Home = () => {
         </div>
         <div className='col-md-9'>
           <h1 className='text-center'>All Products</h1>
+          <div className='carousel'>
+            {products.map((p) => (
+              <div className='item' key={p._id}>
+                <div className='thumb-wrapper'>
+                  <div
+                    className='img-box'
+                    onClick={() => navigate(`/product/${p.slug}`)}
+                  >
+                    <img
+                      src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`}
+                      className='img-fluid'
+                      alt='Play Station'
+                    />
+                  </div>
+                  <div className='thumb-content'>
+                    <h4 onClick={() => navigate(`/product/${p.slug}`)}>
+                      {p.name}
+                    </h4>
+                    <p
+                      className='item-price'
+                      onClick={() => navigate(`/product/${p.slug}`)}
+                    >
+                      <span>{p.price} tk</span>
+                    </p>
 
-          <div className='card-container'>
+                    <div
+                      className='btn btn-primary'
+                      onClick={() => {
+                        if (auth.user) {
+                          addToWishList(p)
+                        } else {
+                          message.error("Please Login First")
+                        }
+                      }}
+                    >
+                      Add to Wishlist
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* <div className='card-container'>
             {products.map((p) => (
               <div
                 className='card product-card-body m-2'
@@ -203,7 +245,7 @@ const Home = () => {
                       src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`}
                       className='card-img-top'
                       alt={p.name}
-                      style={{ height: "10rem" }}
+                      style={{ height: "15rem" }}
                     />
                   </div>
                 </div>
@@ -240,7 +282,7 @@ const Home = () => {
                 </div>
               </div>
             ))}
-          </div>
+          </div> */}
           <div className='m-2 p-3'>
             {products && products.length < total && (
               <button

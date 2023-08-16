@@ -97,49 +97,84 @@ const YourProducts = () => {
             <UserMenu />
           </div>
           <div className='col-md-9'>
-            <h1 className='text-center'>Your Products</h1>
-            <div className='card-container'>
+            <div className='carousel'>
               {products.map((p) => (
                 <div
-                  className='card product-card-body m-2'
-                  style={{ width: "20rem" }}
+                  className='item'
                   key={p._id}
                   onClick={() => handleClick(p.slug)}
                 >
-                  <div className='product-card-img'>
-                    <div className='product-img'>
+                  <div className='thumb-wrapper'>
+                    <div className='img-box'>
                       <img
                         src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`}
-                        className='card-img-top'
-                        alt={p.name}
-                        style={{ height: "10rem" }}
+                        className='img-fluid'
+                        alt='Play Station'
                       />
                     </div>
-                  </div>
+                    <div className='thumb-content'>
+                      <h4>{p.name}</h4>
+                      <p className='item-price'>
+                        <span>{p.price} tk</span>
+                      </p>
 
-                  <div className='product-card-details'>
-                    <div className='product-card-details-row'>
-                      <h5 className='product-name'>{p.name}</h5>
-                      <h5 className='product-price'>{p.price} tk</h5>
+                      <h4>{p.address}</h4>
                     </div>
                   </div>
-                  <p className='product-address'>{p.address}</p>
                 </div>
               ))}
             </div>
-            <div className='m-2 p-3'>
-              {products && products.length < total && (
-                <button
-                  className='btn btn-warning'
-                  onClick={(e) => {
-                    e.preventDefault()
-                    setPage(page + 1)
-                  }}
-                >
-                  {loading ? "Loading..." : "Load More"}
-                </button>
-              )}
-            </div>
+            {/* {products.length > 0 ? (
+              <>
+                <h1 className='text-center'>Your Products</h1>
+                <div className='card-container'>
+                  {products.map((p) => (
+                    <div
+                      className='card product-card-body m-2'
+                      style={{ width: "20rem" }}
+                      key={p._id}
+                      onClick={() => handleClick(p.slug)}
+                    >
+                      <div className='product-card-img'>
+                        <div className='product-img'>
+                          <img
+                            src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`}
+                            className='card-img-top'
+                            alt={p.name}
+                            style={{ height: "10rem" }}
+                          />
+                        </div>
+                      </div>
+
+                      <div className='product-card-details'>
+                        <div className='product-card-details-row'>
+                          <h5 className='product-name'>{p.name}</h5>
+                          <h5 className='product-price'>{p.price} tk</h5>
+                        </div>
+                      </div>
+                      <p className='product-address'>{p.address}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className='m-2 p-3'>
+                  {products && products.length < total && (
+                    <button
+                      className='btn btn-warning'
+                      onClick={(e) => {
+                        e.preventDefault()
+                        setPage(page + 1)
+                      }}
+                    >
+                      {loading ? "Loading..." : "Load More"}
+                    </button>
+                  )}
+                </div>
+              </>
+            ) : (
+              <>
+                <h1 className='text-center'>No Products To Display</h1>
+              </>
+            )} */}
           </div>
         </div>
       </div>

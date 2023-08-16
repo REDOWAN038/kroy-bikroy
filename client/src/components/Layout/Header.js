@@ -37,12 +37,21 @@ const Header = () => {
   //const cartCount = 3
   const messageCount = 15
 
+  const handleClick = () => {
+    navigate("/")
+    window.location.reload()
+  }
+
   return (
     <>
       <header className='header'>
-        <Link to='/' className='logo'>
+        <div
+          className='logo'
+          onClick={() => handleClick()}
+          style={{ cursor: "pointer" }}
+        >
           <img src={logo} alt='Kroy-Bikroy Logo' className='logo-img' />
-        </Link>
+        </div>
         {/* <div className='search-box'> */}
         <SearchInput />
         {/* <input

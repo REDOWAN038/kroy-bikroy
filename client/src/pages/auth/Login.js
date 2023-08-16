@@ -3,6 +3,7 @@ import Layout from "../../components/Layout/Layout"
 import { Link, useNavigate, useLocation } from "react-router-dom"
 import axios from "axios"
 import { useAuth } from "../../context/auth"
+import { message } from "antd"
 
 const Login = () => {
   const emailInputRef = useRef(null)
@@ -30,17 +31,19 @@ const Login = () => {
           password,
         }
       )
-      if (res.data.success) {
+      if (res?.data?.success) {
         //toast.success(res.data.message)
         setAuth({
           ...auth,
-          user: res.data.user,
-          token: res.data.token,
+          user: res?.data?.user,
+          token: res?.data?.token,
         })
-        localStorage.setItem("auth", JSON.stringify(res.data))
+        localStorage.setItem("auth", JSON.stringify(res?.data))
+        message.success(res?.data?.message)
+        //console.log(JSON.stringify(auth?.user?.name))
         navigate(location.state || "/")
       } else {
-        //toast.error(res.data.message)
+        message.error(res?.data?.message)
       }
     } catch (error) {
       console.log(error)
