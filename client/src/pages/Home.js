@@ -82,24 +82,25 @@ const Home = () => {
     // eslint-disable-next-line
   }, [page])
 
-  const addToWishList = async (p) => {
-    let existingWishListItem = localStorage.getItem("wishlist")
-    existingWishListItem = JSON.parse(existingWishListItem)
+  const addToWishList = async (productId) => {
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_API}/api/v1/users/add-wishlist`,
+        { productId }
+      )
 
-    if (wishList.length === 0) {
-      setWishList([...wishList, p])
-      localStorage.setItem("wishlist", JSON.stringify([...wishList, p]))
-      message.success("Item Added to Wishlist")
-      return
-    }
+      if (res?.data?.success) {
+        const msg = res?.data?.message
+        if (msg === "Items Added to WishList") {
+          setWishList(wishList + 1)
+        }
 
-    if (wishList.includes(p)) {
-      message.warning("already in the wishlist")
-    } else {
-      setWishList([...wishList, p])
-      localStorage.setItem("wishlist", JSON.stringify([...wishList, p]))
-      message.success("Item Added to Wishlist")
-      //console.log(wishList)
+        message.success(msg)
+      } else {
+        console.log(res?.data?.message)
+      }
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -215,7 +216,7 @@ const Home = () => {
                       className='btn btn-primary'
                       onClick={() => {
                         if (auth.user) {
-                          addToWishList(p)
+                          addToWishList(p._id)
                         } else {
                           message.error("Please Login First")
                         }

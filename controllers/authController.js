@@ -40,6 +40,7 @@ const register = async (req, res) => {
       email,
       phone,
       password: hashedPassword,
+      wishlist: [],
     }).save()
 
     res.status(201).send({
@@ -101,6 +102,7 @@ const login = async (req, res) => {
         role: user.role,
       },
       token,
+      wishlist: user.wishlist,
     })
   } catch (error) {
     console.log(error)

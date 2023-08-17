@@ -1,18 +1,18 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef } from "react"
 import Layout from "../../components/Layout/Layout"
 import { Link, useNavigate, useLocation } from "react-router-dom"
 import axios from "axios"
 import { useAuth } from "../../context/auth"
 import { message } from "antd"
+import { useWishList } from "../../context/wishlistContext"
 
 const Login = () => {
   const emailInputRef = useRef(null)
   const passwordInputRef = useRef(null)
-  // const [email, setEmail] = useState("")
-  // const [password, setPassword] = useState("")
   const navigate = useNavigate()
   const location = useLocation()
   const [auth, setAuth] = useAuth()
+  const [wishList, setWishList] = useWishList()
 
   useEffect(() => {
     emailInputRef.current.focus()
@@ -23,7 +23,7 @@ const Login = () => {
     try {
       const email = emailInputRef.current.value
       const password = passwordInputRef.current.value
-      //console.log(email, password)
+
       const res = await axios.post(
         `${process.env.REACT_APP_API}/api/v1/auth/login`,
         {
@@ -32,15 +32,18 @@ const Login = () => {
         }
       )
       if (res?.data?.success) {
-        //toast.success(res.data.message)
         setAuth({
           ...auth,
           user: res?.data?.user,
           token: res?.data?.token,
         })
+
         localStorage.setItem("auth", JSON.stringify(res?.data))
-        message.success(res?.data?.message)
-        //console.log(JSON.stringify(auth?.user?.name))
+        //const pp = localStorage.getItem("auth")
+        //console.log("hey " + pp)
+        setWishList(res?.data?.wishlist?.length)
+
+        message.success("Login Successful")
         navigate(location.state || "/")
       } else {
         message.error(res?.data?.message)

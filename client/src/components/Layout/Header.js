@@ -15,12 +15,59 @@ import SearchInput from "../Form/SearchInput"
 import { message } from "antd"
 import { useNavigate } from "react-router-dom"
 import WishList from "../../pages/user/WishList"
+import WishlistDropdown from "../../pages/user/WishlistDropdown"
+import axios from "axios"
 
 const Header = () => {
   const [auth, setAuth] = useAuth()
   const [wishList, setWishList] = useWishList()
+  const [products, setProducts] = useState([])
   const [showOptions, setShowOptions] = useState(false)
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false)
+
   const navigate = useNavigate()
+
+  //detele item
+  const removeFromWishlist = async (productId) => {
+    try {
+      const pp = localStorage.getItem("auth")
+      const pauth = JSON.parse(pp)
+      const userId = pauth?.user?.id
+      const res = await axios.delete(
+        `${process.env.REACT_APP_API}/api/v1/users/remove-from-wishlist`,
+        {
+          data: { userId: userId, productId: productId },
+        }
+      )
+
+      if (res?.data?.success) {
+        setWishList(res?.data?.updatedWishlist?.length)
+        getWishListItems()
+        message.success(res?.data?.message)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const getWishListItems = async () => {
+    try {
+      const pp = localStorage.getItem("auth")
+      const pauth = JSON.parse(pp)
+      const userId = pauth?.user?.id
+      const res = await axios.get(
+        `${process.env.REACT_APP_API}/api/v1/users/get-wishlists`,
+        { params: { userId } }
+      )
+
+      if (res?.data?.success) {
+        setProducts(res?.data?.wishlists)
+        setIsDropdownVisible(true) // Show the dropdown when fetching items
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const handleLogout = () => {
     setAuth({
@@ -28,9 +75,10 @@ const Header = () => {
       user: null,
       token: "",
     })
-    setWishList([])
+
     localStorage.removeItem("auth")
-    localStorage.removeItem("wishlist")
+    setWishList(0)
+    message.success("Logout Successfully")
   }
 
   // Example counts
@@ -82,13 +130,30 @@ const Header = () => {
             )}
           </div>
           <div className='icon'>
+            <div
+              className='icon-navlink'
+              onMouseEnter={getWishListItems}
+              onMouseLeave={() => setIsDropdownVisible(false)} // Hide the dropdown when mouse leaves
+            >
+              <AiOutlineHeart />
+              {isDropdownVisible && products.length > 0 && (
+                <WishlistDropdown
+                  wishlistItems={products}
+                  removeFromWishlist={removeFromWishlist}
+                />
+              )}
+            </div>
+            {wishList > 0 && <span className='count-badge'>{wishList}</span>}
+          </div>
+
+          {/* <div className='icon'>
             <div className='icon-navlink'>
               <AiOutlineHeart
                 onClick={() => {
                   if (!auth.user) {
                     message.error("please login to see wishlist")
                   } else {
-                    if (wishList.length) {
+                    if (wishList) {
                       navigate("/wishlist")
                     } else {
                       message.error("your wishlist is empty")
@@ -97,10 +162,8 @@ const Header = () => {
                 }}
               />
             </div>
-            {wishList?.length > 0 && (
-              <span className='count-badge'>{wishList.length}</span>
-            )}
-          </div>
+            {wishList > 0 && <span className='count-badge'>{wishList}</span>}
+          </div> */}
 
           <div
             className='icon'

@@ -810,3 +810,78 @@ form {
   font-size: 20px;
   padding: 2px 0;
 }
+
+/* wishlist */
+/* Style for the wishlist dropdown */
+.wishlist-dropdown {
+  position: absolute;
+  top: 40px; /* Adjust the distance from the icon */
+  right: 0;
+  width: 350px !important;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  z-index: 1;
+}
+
+/* Style for each wishlist item */
+.wishlist-item {
+  display: flex;
+  align-items: center;
+  /* justify-content: space-around; */
+  margin-bottom: 10px;
+  /* height: 50px; */
+}
+
+.wishlist-item:hover {
+  background-color: #d6dfea;
+}
+
+.wishlist-item img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  /* margin-right: 10px; */
+}
+
+.wishlist-name {
+  width: 100px;
+  margin-left: 30px;
+  margin-top: 15px;
+}
+
+.wishlist-name p {
+  font-weight: bold;
+  text-transform: capitalize;
+  /* margin-top: 17px; */
+  font-size: 15px;
+}
+
+.wishlist-price {
+  width: 100px;
+  margin-left: 30px;
+  margin-top: 15px;
+}
+
+.wishlist-price p {
+  font-weight: bold;
+  /* margin-top: 17px; */
+  /* margin-left: 15px; */
+  color: var(--ternary-color);
+}
+
+.wishlist-btn {
+  width: 20px;
+  margin-top: -15px;
+}
+
+.wishlist-btn button {
+  background-color: transparent;
+  border: none;
+  color: red;
+  /* margin-top: 2px; */
+  /* margin-left: 10px; */
+  font-size: 15px;
+  /* margin-right: 0px; */
+}

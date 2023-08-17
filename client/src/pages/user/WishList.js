@@ -1,26 +1,61 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import Layout from "../../components/Layout/Layout"
 import { useWishList } from "../../context/wishlistContext"
 import { useAuth } from "../../context/auth"
 import { useNavigate } from "react-router-dom"
 import { message } from "antd"
+import axios from "axios"
+
 const WishList = () => {
   const [auth, setAuth] = useAuth()
   const [wishList, setWishList] = useWishList()
+  const [products, setProducts] = useState([])
   const navigate = useNavigate()
 
   //detele item
-  const removeCartItem = (pid) => {
+  const removeFromWishlist = async (productId) => {
     try {
-      let myWishList = [...wishList]
-      let index = myWishList.findIndex((item) => item._id === pid)
-      myWishList.splice(index, 1)
-      setWishList(myWishList)
-      localStorage.setItem("wishlist", JSON.stringify(myWishList))
+      const pp = localStorage.getItem("auth")
+      const pauth = JSON.parse(pp)
+      const userId = pauth?.user?.id
+      const res = await axios.delete(
+        `${process.env.REACT_APP_API}/api/v1/users/remove-from-wishlist`,
+        {
+          data: { userId: userId, productId: productId },
+        }
+      )
+
+      if (res?.data?.success) {
+        setWishList(res?.data?.updatedWishlist?.length)
+        getWishListItems()
+        message.success(res?.data?.message)
+      }
     } catch (error) {
       console.log(error)
     }
   }
+
+  const getWishListItems = async () => {
+    try {
+      const pp = localStorage.getItem("auth")
+      const pauth = JSON.parse(pp)
+      const userId = pauth?.user?.id
+      const res = await axios.get(
+        `${process.env.REACT_APP_API}/api/v1/users/get-wishlists`,
+        { params: { userId } }
+      )
+
+      if (res?.data?.success) {
+        setProducts(res?.data?.wishlists)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    getWishListItems()
+  }, [])
 
   return (
     <Layout>
@@ -32,8 +67,8 @@ const WishList = () => {
             </h1> */}
             <h4 className='text-center'>
               {auth?.token
-                ? wishList?.length
-                  ? `You Have ${wishList.length} items in your wishlist`
+                ? wishList
+                  ? `You Have ${wishList} items in your wishlist`
                   : " Your WishList Is Empty"
                 : message.error("please login to see wishlist")}
             </h4>
@@ -41,8 +76,12 @@ const WishList = () => {
         </div>
         <div className='row'>
           <div>
-            {wishList?.map((p) => (
-              <div className='row mb-2 p-3 card flex-row'>
+            {products?.map((p) => (
+              <div
+                className='row mb-2 p-3 card flex-row'
+                onClick={() => navigate(`/product/${p.slug}`)}
+                style={{ cursor: "pointer" }}
+              >
                 <div className='col-md-4'>
                   <img
                     src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`}
@@ -58,7 +97,10 @@ const WishList = () => {
                   <p>Address : {p.address}</p>
                   <button
                     className='btn btn-danger'
-                    onClick={() => removeCartItem(p._id)}
+                    onClick={(e) => {
+                      e.stopPropagation() // Prevent event propagation
+                      removeFromWishlist(p._id)
+                    }}
                   >
                     Remove
                   </button>
