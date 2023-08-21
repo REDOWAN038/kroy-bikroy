@@ -7,6 +7,11 @@ import { useWishList } from "../context/wishlistContext"
 import { message } from "antd"
 import { useAuth } from "../context/auth"
 
+import { CiLocationOn } from "react-icons/ci"
+import { TbCurrencyTaka } from "react-icons/tb"
+import { BiPhoneCall } from "react-icons/bi"
+import { AiOutlineMessage } from "react-icons/ai"
+
 const ProductDetails = () => {
   const params = useParams()
   const [wishList, setWishList] = useWishList()
@@ -99,7 +104,41 @@ const ProductDetails = () => {
 
   return (
     <Layout>
-      <div className='row product-container mt-2'>
+      <div className='product-details-container'>
+        <div className='product-details-row'>
+          <div className='product-details-col'>
+            <img
+              src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${product._id}`}
+              alt='product_image'
+              width={"100%"}
+            />
+          </div>
+          <div className='product-details-col'>
+            <h5>Posted by : {seller.name}</h5>
+            {/* <p>by {seller.name}</p> */}
+            <h1>{product.name}</h1>
+            <h4>
+              <CiLocationOn style={{ marginTop: "-2px" }} />
+              {product.address}
+            </h4>
+            <h1>
+              <TbCurrencyTaka style={{ marginTop: "-7px" }} />
+              {product.price}
+            </h1>
+            <button className='btn btn-primary'>
+              <AiOutlineMessage style={{ marginRight: "8px" }} />
+              Chat with Seller
+            </button>
+            <button className='btn btn-primary' style={{ marginLeft: "10px" }}>
+              <BiPhoneCall style={{ marginRight: "8px" }} />
+              Call Seller
+            </button>
+            <h3 style={{ marginTop: "10px" }}>Product Details</h3>
+            <p>{product.description}</p>
+          </div>
+        </div>
+      </div>
+      {/* <div className='row product-container mt-2'>
         <div className='col-md-6 text-center mt-5'>
           <img
             src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${product._id}`}
@@ -118,9 +157,9 @@ const ProductDetails = () => {
           <h6>Address : {product.address}</h6>
           <h6>Seller : {seller.name}</h6>
 
-          {/* <button class='btn btn-secondary ms-1'>ADD TO CART</button> */}
+          <button class='btn btn-secondary ms-1'>ADD TO CART</button>
         </div>
-      </div>
+      </div> */}
       <hr />
       <div style={{ marginTop: "40px" }}>
         <h1 style={{ marginLeft: "50px" }}>Similar Products</h1>

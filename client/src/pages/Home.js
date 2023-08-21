@@ -205,12 +205,12 @@ const Home = () => {
                     <h4 onClick={() => navigate(`/product/${p.slug}`)}>
                       {p.name}
                     </h4>
-                    <p
+                    <h4
                       className='item-price'
                       onClick={() => navigate(`/product/${p.slug}`)}
                     >
                       <span>{p.price} tk</span>
-                    </p>
+                    </h4>
 
                     <div
                       className='btn btn-primary'

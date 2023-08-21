@@ -114,9 +114,9 @@ const YourProducts = () => {
                     </div>
                     <div className='thumb-content'>
                       <h4>{p.name}</h4>
-                      <p className='item-price'>
+                      <h4 className='item-price'>
                         <span>{p.price} tk</span>
-                      </p>
+                      </h4>
 
                       <h4>{p.address}</h4>
                     </div>
