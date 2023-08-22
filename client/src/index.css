@@ -971,3 +971,11 @@ form {
   font-weight: 100;
   color: black;
 }
+
+/* messages */
+.messages {
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}

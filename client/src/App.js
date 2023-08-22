@@ -19,6 +19,7 @@ import Products from "./pages/admin/Products"
 import UpdateProduct from "./pages/user/UpdateProduct"
 import Search from "./pages/Search"
 import ProductDetails from "./pages/ProductDetails"
+import Chat from "./pages/Chat"
 import WishList from "./pages/user/WishList"
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
     <>
       <Routes>
         <Route path='/' element={<Home />} />
+        <Route path='/inbox' element={<Chat />} />
         <Route path='/wishlist' element={<WishList />} />
         <Route path='/product/:slug' element={<ProductDetails />} />
         <Route path='/about' element={<About />} />

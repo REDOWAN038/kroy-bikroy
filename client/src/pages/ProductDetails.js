@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom"
 import { useWishList } from "../context/wishlistContext"
 import { message } from "antd"
 import { useAuth } from "../context/auth"
+import { useChat } from "../context/chatContext"
 
 import { CiLocationOn } from "react-icons/ci"
 import { TbCurrencyTaka } from "react-icons/tb"
@@ -19,8 +20,12 @@ const ProductDetails = () => {
 
   const [product, setProduct] = useState({})
   const [relatedProducts, setRelatedProducts] = useState([])
-  const [seller, setSeller] = useState({})
+  const [sellerName, setSellerName] = useState("")
   const navigate = useNavigate()
+
+  const [loadingChat, setLoadingChat] = useState(false)
+  const { setSelectedChat, notification, setNotification, chats, setChats } =
+    useChat()
 
   const getProduct = async () => {
     try {
@@ -52,7 +57,7 @@ const ProductDetails = () => {
           console.log(user)
           if (user._id === sId) {
             //console.log("hurray")
-            setSeller(user)
+            setSellerName(user.name)
           }
         })
       }
@@ -102,6 +107,26 @@ const ProductDetails = () => {
     }
   }
 
+  const accessChat = async (userId, productName) => {
+    try {
+      const { data } = await axios.post(
+        `${process.env.REACT_APP_API}/api/v1/chat`,
+        { userId, productName }
+      )
+
+      if (data?.status === 200) {
+        message.success("chat created")
+      }
+
+      if (!chats.find((c) => c._id === data?.chat?._id))
+        setChats([data?.chat, ...chats])
+      setSelectedChat(data?.chat)
+      navigate("/inbox")
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <Layout>
       <div className='product-details-container'>
@@ -114,7 +139,7 @@ const ProductDetails = () => {
             />
           </div>
           <div className='product-details-col'>
-            <h5>Posted by : {seller.name}</h5>
+            <h5>Posted by : {sellerName}</h5>
             {/* <p>by {seller.name}</p> */}
             <h1>{product.name}</h1>
             <h4>
@@ -125,7 +150,10 @@ const ProductDetails = () => {
               <TbCurrencyTaka style={{ marginTop: "-7px" }} />
               {product.price}
             </h1>
-            <button className='btn btn-primary'>
+            <button
+              className='btn btn-primary'
+              onClick={() => accessChat(product.seller, product.name)}
+            >
               <AiOutlineMessage style={{ marginRight: "8px" }} />
               Chat with Seller
             </button>

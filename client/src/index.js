@@ -8,6 +8,9 @@ import { AuthProvider } from "./context/auth"
 import { CategoryProvider } from "./context/CategoryContext"
 import { SearchProvider } from "./context/SearchContext"
 import { WishListProvider } from "./context/wishlistContext"
+import { ChatProvider } from "./context/chatContext"
+import { ChakraProvider } from "@chakra-ui/react"
+
 import "antd/dist/reset.css"
 
 const root = ReactDOM.createRoot(document.getElementById("root"))
@@ -16,9 +19,13 @@ root.render(
     <CategoryProvider>
       <SearchProvider>
         <WishListProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
+          <ChatProvider>
+            <ChakraProvider>
+              <BrowserRouter>
+                <App />
+              </BrowserRouter>
+            </ChakraProvider>
+          </ChatProvider>
         </WishListProvider>
       </SearchProvider>
     </CategoryProvider>
