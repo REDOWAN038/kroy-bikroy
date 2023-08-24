@@ -11,6 +11,7 @@ import logo from "../../images/logo1.png"
 import Category from "./Category"
 import { useWishList } from "../../context/wishlistContext"
 import { useAuth } from "../../context/auth"
+import { useChat } from "../../context/chatContext"
 import SearchInput from "../Form/SearchInput"
 import { message } from "antd"
 import { useNavigate } from "react-router-dom"
@@ -24,6 +25,7 @@ const Header = () => {
   const [products, setProducts] = useState([])
   const [showOptions, setShowOptions] = useState(false)
   const [isDropdownVisible, setIsDropdownVisible] = useState(false)
+  const { notification, setNotification } = useChat()
 
   const navigate = useNavigate()
 
@@ -83,7 +85,7 @@ const Header = () => {
 
   // Example counts
   //const cartCount = 3
-  const messageCount = 15
+  //const messageCount = 0
 
   const handleClick = () => {
     navigate("/")
@@ -125,8 +127,8 @@ const Header = () => {
             <NavLink to='/inbox' className='icon-navlink'>
               <AiOutlineMessage />
             </NavLink>
-            {messageCount > 0 && (
-              <span className='count-badge'>{messageCount}</span>
+            {notification.length > 0 && (
+              <span className='count-badge'>{notification.length}</span>
             )}
           </div>
           <div className='icon'>
@@ -195,7 +197,7 @@ const Header = () => {
                       <Link
                         to={`/dashboard/${
                           auth?.user?.role === 1
-                            ? "admin/profile"
+                            ? "admin/create-category"
                             : "user/profile"
                         }`}
                         className='option-link'

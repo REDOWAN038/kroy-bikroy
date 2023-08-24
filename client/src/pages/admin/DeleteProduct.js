@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react"
 import Layout from "../../components/Layout/Layout"
 import UserMenu from "../../components/Layout/UserMenu"
 import axios from "axios"
-import { Select } from "antd"
+import { Select, message } from "antd"
 import { useNavigate, useParams } from "react-router-dom"
 import { useAuth } from "../../context/auth"
 const { Option } = Select
 
-const UpdateProduct = () => {
+const DeleteProduct = () => {
   const [auth] = useAuth()
   const navigate = useNavigate()
   const params = useParams()
@@ -18,7 +18,6 @@ const UpdateProduct = () => {
   const [category, setCategory] = useState("")
   const [id, setId] = useState("")
   const [address, setAddress] = useState("")
-  //const [available, setAvailable] = useState("")
   const [image, setImage] = useState("")
 
   // fetching product information
@@ -34,7 +33,7 @@ const UpdateProduct = () => {
         setDescription(res?.data.product.description)
         setPrice(res?.data.product.price)
         setId(res?.data.product._id)
-        setCategory(res?.data.product.category._id)
+        setCategory(res?.data.product.category.name)
         setImage(res?.data.product.image)
         setAddress(res?.data.product.address)
       }
@@ -67,33 +66,6 @@ const UpdateProduct = () => {
     getAllCategories()
   }, [])
 
-  const handleUpdate = async (e) => {
-    e.preventDefault()
-    try {
-      const productData = new FormData()
-      productData.append("name", name)
-      productData.append("description", description)
-      productData.append("price", price)
-      productData.append("category", category)
-      productData.append("address", address)
-      image && productData.append("image", image)
-      productData.append("seller", auth.user.id)
-      console.log(productData)
-
-      const res = await axios.put(
-        `${process.env.REACT_APP_API}/api/v1/product/update-product/${id}`,
-        productData
-      )
-
-      if (res?.data.success) {
-        navigate("/dashboard/user/your-products")
-        //navigate("/dashboard/user")
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   const handleDelete = async () => {
     try {
       let answer = window.prompt("are you sure?")
@@ -102,7 +74,8 @@ const UpdateProduct = () => {
         `${process.env.REACT_APP_API}/api/v1/product/delete-product/${id}`
       )
       if (res?.data.success) {
-        navigate("/dashboard/user/your-products")
+        message.success("product deleted successfully")
+        navigate("/dashboard/admin/products")
       }
     } catch (error) {
       console.log(error)
@@ -117,26 +90,18 @@ const UpdateProduct = () => {
             <UserMenu />
           </div>
           <div className='col-md-9'>
-            <h1>Update Product</h1>
+            <h1>Product Information</h1>
             <div className='m-1 w-75'>
-              <Select
-                bordered={false}
-                placeholder='Select a Category'
-                size='large'
-                showSearch
-                className='form-select mb-3'
-                onChange={(value) => {
-                  setCategory(value)
-                }}
-                required
-                value={category}
-              >
-                {categories?.map((c) => (
-                  <Option key={c._id} value={c._id}>
-                    {c.name}
-                  </Option>
-                ))}
-              </Select>
+              <div className='mb-3'>
+                <input
+                  type='text'
+                  value={category}
+                  placeholder='write a name'
+                  className='form-control'
+                  required
+                  disabled
+                />
+              </div>
               <div className='mb-3'>
                 <input
                   type='text'
@@ -145,6 +110,7 @@ const UpdateProduct = () => {
                   className='form-control'
                   onChange={(e) => setName(e.target.value)}
                   required
+                  disabled
                 />
               </div>
               <div className='mb-3'>
@@ -155,6 +121,7 @@ const UpdateProduct = () => {
                   className='form-control'
                   onChange={(e) => setDescription(e.target.value)}
                   required
+                  disabled
                 />
               </div>
 
@@ -167,6 +134,7 @@ const UpdateProduct = () => {
                   className='form-control'
                   onChange={(e) => setPrice(e.target.value)}
                   required
+                  disabled
                 />
               </div>
               <div className='mb-3'>
@@ -177,6 +145,7 @@ const UpdateProduct = () => {
                   className='form-control'
                   onChange={(e) => setAddress(e.target.value)}
                   required
+                  disabled
                 />
               </div>
 
@@ -202,15 +171,11 @@ const UpdateProduct = () => {
                     onChange={(e) => setImage(e.target.files[0])}
                     hidden
                     required
+                    disabled
                   />
                 </label>
               </div>
               <div className='d-flex'>
-                <div className='mb-3 mr-10'>
-                  <button className='btn btn-primary' onClick={handleUpdate}>
-                    UPDATE
-                  </button>
-                </div>
                 <div className='mb-3'>
                   <button className='btn btn-danger' onClick={handleDelete}>
                     DELETE
@@ -225,4 +190,4 @@ const UpdateProduct = () => {
   )
 }
 
-export default UpdateProduct
+export default DeleteProduct

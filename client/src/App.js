@@ -21,6 +21,7 @@ import Search from "./pages/Search"
 import ProductDetails from "./pages/ProductDetails"
 import Chat from "./pages/Chat"
 import WishList from "./pages/user/WishList"
+import DeleteProduct from "./pages/admin/DeleteProduct"
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
           <Route path='admin/users' element={<Users />} />
           <Route path='admin/create-category' element={<CreateCategory />} />
           <Route path='admin/products' element={<Products />} />
+          <Route path='admin/product/:slug' element={<DeleteProduct />} />
         </Route>
 
         {/* <Route path='/contact' element={<Contact />} /> 

@@ -5,6 +5,7 @@ const slugify = require("slugify")
 const getUsersController = async (req, res) => {
   try {
     const users = await userModel.find({})
+
     res.status(200).send({
       success: true,
       message: "User Lists",

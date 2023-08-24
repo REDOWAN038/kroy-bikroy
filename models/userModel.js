@@ -7,6 +7,12 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
       trim: true,
+      validate: {
+        validator: function (v) {
+          return /^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(v)
+        },
+        message: "Invalid email address.",
+      },
     },
     name: {
       type: String,
@@ -16,8 +22,13 @@ const userSchema = new mongoose.Schema(
     phone: {
       type: String,
       required: true,
-      trim: true,
       unique: true,
+      validate: {
+        validator: function (v) {
+          return /^[0-9]{11}$/.test(v)
+        },
+        message: "Mobile number must be exactly 11 digits.",
+      },
     },
     password: {
       type: String,
@@ -32,7 +43,6 @@ const userSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Product",
-        unique: true,
       },
     ],
   },
