@@ -45,12 +45,10 @@ const Login = () => {
 
         message.success("Login Successful")
         navigate(location.state || "/")
-      } else {
-        message.error(res?.data?.message)
       }
     } catch (error) {
-      console.log(error)
-      // toast.error("something went wrong")
+      //console.log(error)
+      message.error("Invalid Credentials")
     }
   }
   return (

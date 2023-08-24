@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import Layout from "../../components/Layout/Layout"
 import UserMenu from "../../components/Layout/UserMenu"
 import axios from "axios"
-import { Select } from "antd"
+import { Select, message } from "antd"
 import { useNavigate, useParams } from "react-router-dom"
 import { useAuth } from "../../context/auth"
 const { Option } = Select
@@ -16,9 +16,8 @@ const UpdateProduct = () => {
   const [description, setDescription] = useState("")
   const [price, setPrice] = useState("")
   const [category, setCategory] = useState("")
-  const [id, setId] = useState("")
+  const [pid, setPid] = useState("")
   const [address, setAddress] = useState("")
-  //const [available, setAvailable] = useState("")
   const [image, setImage] = useState("")
 
   // fetching product information
@@ -33,7 +32,7 @@ const UpdateProduct = () => {
         setName(res?.data.product.name)
         setDescription(res?.data.product.description)
         setPrice(res?.data.product.price)
-        setId(res?.data.product._id)
+        setPid(res?.data.product._id)
         setCategory(res?.data.product.category._id)
         setImage(res?.data.product.image)
         setAddress(res?.data.product.address)
@@ -81,13 +80,19 @@ const UpdateProduct = () => {
       console.log(productData)
 
       const res = await axios.put(
-        `${process.env.REACT_APP_API}/api/v1/product/update-product/${id}`,
+        `${process.env.REACT_APP_API}/api/v1/product/update-product/${pid}`,
         productData
       )
 
-      if (res?.data.success) {
+      //console.log(productData.image)
+
+      if (res?.data?.success) {
+        message.success("Product Updated Successfully")
         navigate("/dashboard/user/your-products")
         //navigate("/dashboard/user")
+      } else {
+        console.log(res?.data?.error)
+        //message.error(res?.data?.message)
       }
     } catch (error) {
       console.log(error)
@@ -99,9 +104,10 @@ const UpdateProduct = () => {
       let answer = window.prompt("are you sure?")
       if (!answer) return
       const res = await axios.delete(
-        `${process.env.REACT_APP_API}/api/v1/product/delete-product/${id}`
+        `${process.env.REACT_APP_API}/api/v1/product/delete-product/${pid}`
       )
       if (res?.data.success) {
+        message.success("Product Deleted Successfully")
         navigate("/dashboard/user/your-products")
       }
     } catch (error) {
@@ -190,7 +196,7 @@ const UpdateProduct = () => {
                     />
                   ) : (
                     <img
-                      src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${id}`}
+                      src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${pid}`}
                       alt='product_image'
                       className='img img-responsive'
                     />
@@ -207,7 +213,11 @@ const UpdateProduct = () => {
               </div>
               <div className='d-flex'>
                 <div className='mb-3 mr-10'>
-                  <button className='btn btn-primary' onClick={handleUpdate}>
+                  <button
+                    className='btn btn-primary'
+                    style={{ marginRight: "10px" }}
+                    onClick={handleUpdate}
+                  >
                     UPDATE
                   </button>
                 </div>

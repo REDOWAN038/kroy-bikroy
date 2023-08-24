@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import Layout from "../../components/Layout/Layout"
 import AdminMenu from "../../components/Layout/AdminMenu"
 import axios from "axios"
+import { message } from "antd"
 
 const Users = () => {
   const [users, setUsers] = useState([])
@@ -9,7 +10,7 @@ const Users = () => {
   const getUsers = async () => {
     try {
       const res = await axios.get(
-        `${process.env.REACT_APP_API}/api/v1/users//get-users`
+        `${process.env.REACT_APP_API}/api/v1/users/get-users`
       )
 
       //console.log(res?.data?.users)
@@ -22,7 +23,24 @@ const Users = () => {
     }
   }
 
-  const handleDelete = async (userId) => {}
+  const handleDelete = async (sellerId) => {
+    try {
+      let answer = window.prompt("are you sure?")
+      if (!answer) return
+      const res = await axios.delete(
+        `${process.env.REACT_APP_API}/api/v1/users/remove-user/${sellerId}`
+      )
+
+      if (res?.data?.success) {
+        message.success(res?.data?.message)
+        window.location.reload()
+      } else {
+        message.error(res?.data?.message)
+      }
+    } catch (error) {
+      message.error("something went wrong")
+    }
+  }
 
   useEffect(() => {
     getUsers()
@@ -49,7 +67,7 @@ const Users = () => {
                 {users.map(
                   (user) =>
                     user.role == 0 && (
-                      <tr>
+                      <tr key={user._id}>
                         <th scope='row'>{user.email}</th>
                         <td>{user.name}</td>
                         <td>{user.phone}</td>

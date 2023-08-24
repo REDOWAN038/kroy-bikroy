@@ -33,14 +33,6 @@ router.get("/get-products", getAllProductController)
 
 router.get("/get-product/:slug", getSingleProductController)
 
-// get product photo
-
-router.get("/product-photo/:pid", getProductImageController)
-
-// delete product
-
-router.delete("/delete-product/:pid", requireSignIn, deleteProductController)
-
 // update product
 
 router.put(
@@ -49,6 +41,14 @@ router.put(
   formidable(),
   updateProductController
 )
+
+// get product photo
+
+router.get("/product-photo/:pid", getProductImageController)
+
+// delete product
+
+router.delete("/delete-product/:pid", requireSignIn, deleteProductController)
 
 // filtering
 

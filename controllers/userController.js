@@ -106,9 +106,43 @@ const removeFromWishlist = async (req, res) => {
   }
 }
 
+const deleteUserController = async (req, res) => {
+  try {
+    const { sellerId } = req.params
+    console.log(sellerId)
+    // Find the seller to be deleted
+    const seller = await userModel.findById(sellerId)
+
+    if (!seller) {
+      return res
+        .status(404)
+        .send({ success: false, message: "Seller not found" })
+    }
+
+    // Delete the associated products
+    await productModel.deleteMany({ seller: sellerId })
+
+    // Delete the seller
+    await userModel.findByIdAndDelete(sellerId)
+
+    res.status(200).send({
+      success: true,
+      message: "Seller and associated products deleted",
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).send({
+      success: false,
+      error,
+      message: "Error while deleting user",
+    })
+  }
+}
+
 module.exports = {
   getUsersController,
   addToWishlist,
   getWishLists,
   removeFromWishlist,
+  deleteUserController,
 }
