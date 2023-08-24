@@ -51,6 +51,25 @@ const Login = () => {
       message.error("Invalid Credentials")
     }
   }
+
+  const handleForgotPassword = async () => {
+    try {
+      let email = window.prompt("Enter Your Email : ")
+      const res = await axios.post(
+        `${process.env.REACT_APP_API}/api/v1/auth/forgot-password`,
+        {
+          email,
+        }
+      )
+
+      if (res?.data?.success) {
+        message.success("Please Cheack Your Mail")
+        navigate("/login")
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
     <Layout>
       <div className='container' id='container'>
@@ -87,7 +106,11 @@ const Login = () => {
               // onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <Link to='#' className='forgot-password'>
+            <Link
+              to='#'
+              className='forgot-password'
+              onClick={() => handleForgotPassword()}
+            >
               Forgot Your Password
             </Link>
             <button type='submit' style={{ marginBottom: "10px" }}>

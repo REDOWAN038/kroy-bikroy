@@ -4,6 +4,8 @@ const {
   register,
   login,
   updateProfileController,
+  forgotPasswordController,
+  resetPasswordController,
 } = require("../controllers/authController")
 const { requireSignIn, isAdmin } = require("../middlewares/authMiddleware")
 
@@ -22,5 +24,11 @@ router.get("/admin-auth", requireSignIn, isAdmin, (req, res) => {
 
 //update profile
 router.put("/update-profile", requireSignIn, updateProfileController)
+
+// forgot password
+router.post("/forgot-password", forgotPasswordController)
+
+// reset password
+router.put("/reset-password/:id/:token", resetPasswordController)
 
 module.exports = router

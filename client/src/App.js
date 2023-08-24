@@ -17,6 +17,7 @@ import YourProducts from "./pages/user/YourProducts"
 import CreateProduct from "./pages/user/CreateProduct"
 import Products from "./pages/admin/Products"
 import UpdateProduct from "./pages/user/UpdateProduct"
+import ResetPassword from "./pages/user/ResetPassword"
 import Search from "./pages/Search"
 import ProductDetails from "./pages/ProductDetails"
 import Chat from "./pages/Chat"
@@ -35,6 +36,7 @@ function App() {
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />
         <Route path='/search' element={<Search />} />
+        <Route path='/reset-password/:id/:token' element={<ResetPassword />} />
         <Route path='/dashboard' element={<PrivateRoute />}>
           <Route path='user' element={<Dashboard />} />
           <Route path='user/profile' element={<Profile />} />

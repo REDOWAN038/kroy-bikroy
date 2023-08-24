@@ -1,6 +1,7 @@
 const userModel = require("../models/userModel")
 const { hashPassword, comparePassword } = require("../helpers/authHelper")
 const JWT = require("jsonwebtoken")
+const nodemailer = require("nodemailer")
 
 const register = async (req, res) => {
   try {
@@ -144,4 +145,94 @@ const updateProfileController = async (req, res) => {
   }
 }
 
-module.exports = { register, login, updateProfileController }
+const forgotPasswordController = async (req, res) => {
+  try {
+    const { email } = req.body
+    if (!email) {
+      return res.status(404).send({
+        success: false,
+        message: "please provide your email",
+      })
+    }
+
+    const user = await userModel.findOne({ email })
+    if (!user) {
+      return res.status(404).send({
+        success: false,
+        message: "not registered",
+      })
+    }
+
+    const token = await JWT.sign({ _id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "30m",
+    })
+
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    })
+
+    const info = await transporter.sendMail({
+      from: process.env.SMTP_USER, // sender address
+      to: email, // list of receivers
+      subject: "Reset Your Password",
+      text: `http://localhost:3000/reset-password/${user._id}/${token}`,
+    })
+
+    res.status(200).send({
+      success: true,
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(400).send({
+      success: false,
+      message: "Error WHile Updating Password",
+      error,
+    })
+  }
+}
+
+const resetPasswordController = async (req, res) => {
+  try {
+    const { id, token } = req.params
+    const { password } = req.body
+
+    const decode = JWT.verify(token, process.env.JWT_SECRET)
+
+    if (decode) {
+      const hashedPassword = await hashPassword(password)
+      const updatedUser = await userModel.findByIdAndUpdate(
+        id,
+        {
+          password: hashedPassword,
+        },
+        { new: true }
+      )
+      res.status(200).send({
+        success: true,
+        message: "Password Updated SUccessfully",
+        updatedUser,
+      })
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(400).send({
+      success: false,
+      message: "Error WHile Updating Password",
+      error,
+    })
+  }
+}
+
+module.exports = {
+  register,
+  login,
+  updateProfileController,
+  forgotPasswordController,
+  resetPasswordController,
+}
