@@ -202,9 +202,15 @@ const Home = () => {
                     />
                   </div>
                   <div className='thumb-content'>
-                    <h4 onClick={() => navigate(`/product/${p.slug}`)}>
-                      {p.name}
-                    </h4>
+                    {p.name.length <= 25 ? (
+                      <h4 onClick={() => navigate(`/product/${p.slug}`)}>
+                        {p.name}
+                      </h4>
+                    ) : (
+                      <h4 onClick={() => navigate(`/product/${p.slug}`)}>
+                        {p.name.substring(0, 22)}...
+                      </h4>
+                    )}
                     <h4
                       className='item-price'
                       onClick={() => navigate(`/product/${p.slug}`)}
@@ -230,60 +236,6 @@ const Home = () => {
             ))}
           </div>
 
-          {/* <div className='card-container'>
-            {products.map((p) => (
-              <div
-                className='card product-card-body m-2'
-                style={{ width: "20rem" }}
-                key={p._id}
-              >
-                <div
-                  className='product-card-img'
-                  onClick={() => navigate(`/product/${p.slug}`)}
-                >
-                  <div className='product-img'>
-                    <img
-                      src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`}
-                      className='card-img-top'
-                      alt={p.name}
-                      style={{ height: "15rem" }}
-                    />
-                  </div>
-                </div>
-
-                <div
-                  className='product-card-details'
-                  onClick={() => navigate(`/product/${p.slug}`)}
-                >
-                  <div className='product-card-details-row'>
-                    <h5 className='product-name'>{p.name}</h5>
-                    <h5 className='product-price'>{p.price} tk</h5>
-                  </div>
-                </div>
-                <div className='product-card-details'>
-                  <div className='product-card-details-row'>
-                    <p
-                      className='product-address'
-                      onClick={() => navigate(`/product/${p.slug}`)}
-                    >
-                      {p.address}
-                    </p>
-                    <button className='wishlist-icon'>
-                      <AiOutlineHeart
-                        onClick={() => {
-                          if (auth.user) {
-                            addToWishList(p)
-                          } else {
-                            message.error("Please Login First")
-                          }
-                        }}
-                      />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div> */}
           <div className='m-2 p-3'>
             {products && products.length < total && (
               <button

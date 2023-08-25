@@ -99,13 +99,21 @@ const Products = () => {
                   <div className='thumb-wrapper'>
                     <div className='img-box'>
                       <img
-                        src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`}
+                        src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}/1`}
                         className='img-fluid'
                         alt={p.name}
                       />
                     </div>
                     <div className='thumb-content'>
-                      <h4>{p.name}</h4>
+                      {p.name.length <= 25 ? (
+                        <h4 onClick={() => navigate(`/product/${p.slug}`)}>
+                          {p.name}
+                        </h4>
+                      ) : (
+                        <h4 onClick={() => navigate(`/product/${p.slug}`)}>
+                          {p.name.substring(0, 22)}...
+                        </h4>
+                      )}
                       <h4 className='item-price'>
                         <span>{p.price} tk</span>
                       </h4>
@@ -115,6 +123,20 @@ const Products = () => {
                   </div>
                 </div>
               ))}
+            </div>
+
+            <div className='m-2 p-3'>
+              {products && products.length < total && (
+                <button
+                  className='btn btn-warning'
+                  onClick={(e) => {
+                    e.preventDefault()
+                    setPage(page + 1)
+                  }}
+                >
+                  {loading ? "Loading..." : "Load More"}
+                </button>
+              )}
             </div>
           </div>
         </div>

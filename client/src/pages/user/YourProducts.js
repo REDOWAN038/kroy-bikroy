@@ -18,7 +18,7 @@ const YourProducts = () => {
     try {
       setLoading(true)
       const res = await axios.get(
-        `${process.env.REACT_APP_API}/api/v1/product/product-list/${page}`
+        `${process.env.REACT_APP_API}/api/v1/product/get-products`
       )
       setLoading(false)
       if (res?.data.success) {
@@ -42,48 +42,6 @@ const YourProducts = () => {
     getAllProducts()
     // eslint-disable-next-line
   }, [])
-
-  // get total products
-  const getTotalProducts = async () => {
-    try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_API}/api/v1/product/product-count`
-      )
-
-      if (res?.data.success) {
-        setTotal(res?.data.total)
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  useEffect(() => {
-    getTotalProducts()
-  }, [])
-
-  const loadMore = async () => {
-    try {
-      setLoading(true)
-      const res = await axios.get(
-        `${process.env.REACT_APP_API}/api/v1/product/product-list/${page}`
-      )
-      setLoading(false)
-
-      if (res?.data.success) {
-        setProducts([...products, ...res?.data.products])
-      }
-    } catch (error) {
-      setLoading(false)
-      console.log(error)
-    }
-  }
-
-  useEffect(() => {
-    if (page === 1) return
-    loadMore()
-    // eslint-disable-next-line
-  }, [page])
 
   const handleClick = async (slug) => {
     navigate(`/dashboard/user/product/${slug}`)
@@ -113,7 +71,15 @@ const YourProducts = () => {
                       />
                     </div>
                     <div className='thumb-content'>
-                      <h4>{p.name}</h4>
+                      {p.name.length <= 25 ? (
+                        <h4 onClick={() => navigate(`/product/${p.slug}`)}>
+                          {p.name}
+                        </h4>
+                      ) : (
+                        <h4 onClick={() => navigate(`/product/${p.slug}`)}>
+                          {p.name.substring(0, 22)}...
+                        </h4>
+                      )}
                       <h4 className='item-price'>
                         <span>{p.price} tk</span>
                       </h4>

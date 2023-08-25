@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import Layout from "../../components/Layout/Layout"
-import UserMenu from "../../components/Layout/UserMenu"
+import AdminMenu from "../../components/Layout/AdminMenu"
 import axios from "axios"
 import { Select, message } from "antd"
 import { useNavigate, useParams } from "react-router-dom"
@@ -18,7 +18,10 @@ const DeleteProduct = () => {
   const [category, setCategory] = useState("")
   const [id, setId] = useState("")
   const [address, setAddress] = useState("")
-  const [image, setImage] = useState("")
+  const [image1, setImage1] = useState("")
+  const [image2, setImage2] = useState("")
+  const [image3, setImage3] = useState("")
+  const [image4, setImage4] = useState("")
 
   // fetching product information
 
@@ -34,7 +37,10 @@ const DeleteProduct = () => {
         setPrice(res?.data.product.price)
         setId(res?.data.product._id)
         setCategory(res?.data.product.category.name)
-        setImage(res?.data.product.image)
+        res?.data?.product?.image1 && setImage1(res?.data?.product?.image1)
+        res?.data?.product?.image2 && setImage2(res?.data?.product?.image2)
+        res?.data?.product?.image3 && setImage3(res?.data?.product?.image3)
+        res?.data?.product?.image4 && setImage4(res?.data?.product?.image4)
         setAddress(res?.data.product.address)
       }
     } catch (error) {
@@ -87,7 +93,7 @@ const DeleteProduct = () => {
       <div className='container-fluid m-3 p-3'>
         <div className='row'>
           <div className='col-md-3'>
-            <UserMenu />
+            <AdminMenu />
           </div>
           <div className='col-md-9'>
             <h1>Product Information</h1>
@@ -149,31 +155,119 @@ const DeleteProduct = () => {
                 />
               </div>
 
-              <div className='mb-5'>
-                <label className='btn btn-outline-secondary image-container'>
-                  {image ? (
-                    <img
-                      src={URL.createObjectURL(image)}
-                      alt='product_image'
-                      className='img img-responsive'
-                    />
-                  ) : (
-                    <img
-                      src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${id}`}
-                      alt='product_image'
-                      className='img img-responsive'
-                    />
-                  )}
-                  <input
-                    type='file'
-                    name='image'
-                    accept='image/*'
-                    onChange={(e) => setImage(e.target.files[0])}
-                    hidden
-                    required
-                    disabled
-                  />
-                </label>
+              <div className='row'>
+                <div className='col-md-3'>
+                  <div className='mb-5'>
+                    <label className='btn btn-outline-secondary image-container'>
+                      {image1 ? (
+                        <img
+                          src={URL.createObjectURL(image1)}
+                          alt='product_image'
+                          className='img img-responsive'
+                        />
+                      ) : (
+                        <img
+                          src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${id}/1`}
+                          alt='product_image'
+                          className='img img-responsive'
+                        />
+                      )}
+                      <input
+                        type='file'
+                        name='image1'
+                        accept='image/*'
+                        onChange={(e) => setImage1(e.target.files[0])}
+                        hidden
+                        required
+                        disabled
+                      />
+                    </label>
+                  </div>
+                </div>
+                <div className='col-md-3'>
+                  <div className='mb-5'>
+                    <label className='btn btn-outline-secondary image-container'>
+                      {image2 ? (
+                        <img
+                          src={URL.createObjectURL(image2)}
+                          alt='product_image'
+                          className='img img-responsive'
+                        />
+                      ) : (
+                        <img
+                          src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${id}/2`}
+                          alt='product_image'
+                          className='img img-responsive'
+                        />
+                      )}
+                      <input
+                        type='file'
+                        name='image2'
+                        accept='image/*'
+                        onChange={(e) => setImage2(e.target.files[0])}
+                        hidden
+                        required
+                        disabled
+                      />
+                    </label>
+                  </div>
+                </div>
+                <div className='col-md-3'>
+                  <div className='mb-5'>
+                    <label className='btn btn-outline-secondary image-container'>
+                      {image3 ? (
+                        <img
+                          src={URL.createObjectURL(image3)}
+                          alt='product_image'
+                          className='img img-responsive'
+                        />
+                      ) : (
+                        <img
+                          src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${id}/3`}
+                          alt='product_image'
+                          className='img img-responsive'
+                        />
+                      )}
+                      <input
+                        type='file'
+                        name='image3'
+                        accept='image/*'
+                        onChange={(e) => setImage3(e.target.files[0])}
+                        hidden
+                        required
+                        disabled
+                      />
+                    </label>
+                  </div>
+                </div>
+                <div className='col-md-3'>
+                  <div className='mb-5'>
+                    <label className='btn btn-outline-secondary image-container'>
+                      {image4 ? (
+                        <img
+                          src={URL.createObjectURL(image4)}
+                          alt='product_image'
+                          className='img img-responsive'
+                        />
+                      ) : (
+                        <img
+                          src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${id}/4`}
+                          alt='product_image'
+                          className='img img-responsive'
+                        />
+                      )}
+                      <input
+                        type='file'
+                        name='image4'
+                        accept='image/*'
+                        onChange={(e) => setImage4(e.target.files[0])}
+                        hidden
+                        required
+                        disabled
+                      />
+                    </label>
+                  </div>
+                </div>
               </div>
               <div className='d-flex'>
                 <div className='mb-3'>

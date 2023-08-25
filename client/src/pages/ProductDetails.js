@@ -257,28 +257,7 @@ const ProductDetails = () => {
           </div>
         </div>
       </div>
-      {/* <div className='row product-container mt-2'>
-        <div className='col-md-6 text-center mt-5'>
-          <img
-            src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${product._id}`}
-            alt='product_image'
-            className='img img-responsive'
-            height={"300"}
-            width={"350px"}
-          />
-        </div>
-        <div className='col-md-6 mt-5'>
-          <h1>Product Details</h1>
-          <h6>Name : {product.name}</h6>
-          <h6>Description : {product.description}</h6>
-          <h6>Price : {product.price}</h6>
-          <h6>Category : {product?.category?.name}</h6>
-          <h6>Address : {product.address}</h6>
-          <h6>Seller : {seller.name}</h6>
 
-          <button class='btn btn-secondary ms-1'>ADD TO CART</button>
-        </div>
-      </div> */}
       <hr />
       <div style={{ marginTop: "40px" }}>
         <h1 style={{ marginLeft: "50px" }}>Similar Products</h1>
@@ -294,14 +273,22 @@ const ProductDetails = () => {
                   onClick={() => navigate(`/product/${p.slug}`)}
                 >
                   <img
-                    src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`}
+                    src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}/1`}
                     className='img-fluid'
                     alt='Play Station'
                   />
                 </div>
                 <div className='thumb-content'>
                   <h4 onClick={() => navigate(`/product/${p.slug}`)}>
-                    {p.name}
+                    {p.name.length <= 25 ? (
+                      <h4 onClick={() => navigate(`/product/${p.slug}`)}>
+                        {p.name}
+                      </h4>
+                    ) : (
+                      <h4 onClick={() => navigate(`/product/${p.slug}`)}>
+                        {p.name.substring(0, 22)}...
+                      </h4>
+                    )}
                   </h4>
                   <p
                     className='item-price'
