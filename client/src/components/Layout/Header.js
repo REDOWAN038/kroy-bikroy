@@ -83,10 +83,6 @@ const Header = () => {
     message.success("Logout Successfully")
   }
 
-  // Example counts
-  //const cartCount = 3
-  //const messageCount = 0
-
   const handleClick = () => {
     navigate("/")
     window.location.reload()
@@ -102,18 +98,8 @@ const Header = () => {
         >
           <img src={logo} alt='Kroy-Bikroy Logo' className='logo-img' />
         </div>
-        {/* <div className='search-box'> */}
         <SearchInput />
-        {/* <input
-            type='text'
-            placeholder='Enter the product name...'
-            ref={searchInputRef}
-            className='search-input'
-          />
-          <div className='search-icon'>
-            <AiOutlineSearch />
-          </div> */}
-        {/* </div> */}
+
         <div className='icons'>
           <div className='icon'>
             <NavLink
@@ -147,25 +133,6 @@ const Header = () => {
             </div>
             {wishList > 0 && <span className='count-badge'>{wishList}</span>}
           </div>
-
-          {/* <div className='icon'>
-            <div className='icon-navlink'>
-              <AiOutlineHeart
-                onClick={() => {
-                  if (!auth.user) {
-                    message.error("please login to see wishlist")
-                  } else {
-                    if (wishList) {
-                      navigate("/wishlist")
-                    } else {
-                      message.error("your wishlist is empty")
-                    }
-                  }
-                }}
-              />
-            </div>
-            {wishList > 0 && <span className='count-badge'>{wishList}</span>}
-          </div> */}
 
           <div
             className='icon'

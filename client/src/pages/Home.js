@@ -32,7 +32,7 @@ const Home = () => {
       setLoading(false)
 
       if (res?.data.success) {
-        setProducts(res?.data.products)
+        setProducts(res?.data?.products)
       }
     } catch (error) {
       setLoading(false)
@@ -47,8 +47,8 @@ const Home = () => {
         `${process.env.REACT_APP_API}/api/v1/product/product-count`
       )
 
-      if (res?.data.success) {
-        setTotal(res?.data.total)
+      if (res?.data?.success) {
+        setTotal(res?.data?.total)
       }
     } catch (error) {
       console.log(error)
@@ -67,8 +67,8 @@ const Home = () => {
       )
       setLoading(false)
 
-      if (res?.data.success) {
-        setProducts([...products, ...res?.data.products])
+      if (res?.data?.success) {
+        setProducts([...products, ...res?.data?.products])
       }
     } catch (error) {
       setLoading(false)
@@ -196,7 +196,7 @@ const Home = () => {
                     onClick={() => navigate(`/product/${p.slug}`)}
                   >
                     <img
-                      src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`}
+                      src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}/1`}
                       className='img-fluid'
                       alt='Play Station'
                     />

@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react"
 import Layout from "../components/Layout/Layout"
 import axios from "axios"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faCommentDots } from "@fortawesome/free-regular-svg-icons"
+import {
+  faPhone,
+  faBangladeshiTakaSign,
+  faLocationDot,
+} from "@fortawesome/free-solid-svg-icons"
 import { useParams } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
 import { useWishList } from "../context/wishlistContext"
 import { message } from "antd"
 import { useAuth } from "../context/auth"
 import { useChat } from "../context/chatContext"
-
-import { CiLocationOn } from "react-icons/ci"
-import { TbCurrencyTaka } from "react-icons/tb"
-import { BiPhoneCall } from "react-icons/bi"
-import { AiOutlineMessage } from "react-icons/ai"
 
 const ProductDetails = () => {
   const params = useParams()
@@ -21,6 +23,9 @@ const ProductDetails = () => {
   const [product, setProduct] = useState({})
   const [relatedProducts, setRelatedProducts] = useState([])
   const [sellerName, setSellerName] = useState("")
+  const [sellerPhone, setSellerPhone] = useState("")
+  const [imageId, setImageId] = useState("")
+
   const navigate = useNavigate()
 
   const [loadingChat, setLoadingChat] = useState(false)
@@ -32,10 +37,8 @@ const ProductDetails = () => {
       const { data } = await axios.get(
         `${process.env.REACT_APP_API}/api/v1/product/get-product/${params.slug}`
       )
+      setImageId("1")
       setProduct(data?.product)
-      //console.log(product?.seller)
-      //console.log(data?.product?.category?._id)
-      //getSeller(JSON.parse(product?.seller))
       getSeller(data?.product?.seller)
       getSimilarProduct(data?.product._id, data?.product.category._id)
     } catch (error) {
@@ -58,6 +61,7 @@ const ProductDetails = () => {
           if (user._id === sId) {
             //console.log("hurray")
             setSellerName(user.name)
+            setSellerPhone(user.phone)
           }
         })
       }
@@ -127,38 +131,125 @@ const ProductDetails = () => {
     }
   }
 
+  const copyToClipboard = () => {
+    const textarea = document.createElement("textarea")
+    textarea.value = sellerPhone
+    textarea.setAttribute("readonly", "") // Make it read-only to prevent keyboard popup on mobile devices
+    textarea.style.position = "absolute"
+    textarea.style.left = "-9999px" // Move it off-screen
+
+    // Append the textarea to the document
+    document.body.appendChild(textarea)
+
+    // Select the text in the textarea
+    textarea.select()
+
+    try {
+      // Execute the copy command
+      document.execCommand("copy")
+      message.success("phone number copied to clipboard")
+    } catch (error) {
+      console.error("Copy to clipboard failed: ", error)
+    } finally {
+      // Clean up by removing the textarea from the document
+      document.body.removeChild(textarea)
+    }
+  }
+
   return (
     <Layout>
       <div className='product-details-container'>
         <div className='product-details-row'>
           <div className='product-details-col'>
-            <img
-              src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${product._id}`}
-              alt='product_image'
-              width={"100%"}
-            />
+            <div className='product-selected-img'>
+              <img
+                src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${product._id}/${imageId}`}
+                alt='product_image'
+              />
+            </div>
+
+            <div className='product-small-img-row'>
+              <div className='product-small-img-col'>
+                <img
+                  src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${product._id}/1`}
+                  alt='product_image_1'
+                  className='img-fluid'
+                  onClick={() => setImageId("1")}
+                />
+              </div>
+              <div className='product-small-img-col'>
+                <img
+                  src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${product._id}/2`}
+                  alt='product_image_2'
+                  className='img-fluid'
+                  onClick={() => setImageId("2")}
+                />
+              </div>
+              <div className='product-small-img-col'>
+                <img
+                  src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${product._id}/3`}
+                  alt='product_image_3'
+                  className='img-fluid'
+                  onClick={() => setImageId("3")}
+                />
+              </div>
+              <div className='product-small-img-col'>
+                <img
+                  src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${product._id}/4`}
+                  alt='product_image_4'
+                  className='img-fluid'
+                  onClick={() => setImageId("4")}
+                />
+              </div>
+            </div>
           </div>
-          <div className='product-details-col'>
+          <div className='product-details-col' style={{ marginTop: "-50px" }}>
             <h5>Posted by : {sellerName}</h5>
             {/* <p>by {seller.name}</p> */}
             <h1>{product.name}</h1>
             <h4>
-              <CiLocationOn style={{ marginTop: "-2px" }} />
+              <FontAwesomeIcon
+                icon={faLocationDot}
+                size='sm'
+                style={{ marginRight: "10px" }}
+              />
               {product.address}
             </h4>
             <h1>
-              <TbCurrencyTaka style={{ marginTop: "-7px" }} />
+              <FontAwesomeIcon
+                icon={faBangladeshiTakaSign}
+                size='sm'
+                style={{ marginRight: "10px" }}
+              />
               {product.price}
             </h1>
             <button
               className='btn btn-primary'
-              onClick={() => accessChat(product.seller, product.name)}
+              onClick={() => {
+                auth?.user
+                  ? accessChat(product.seller, product.name)
+                  : message.error("Sign In First")
+              }}
             >
-              <AiOutlineMessage style={{ marginRight: "8px" }} />
+              <FontAwesomeIcon
+                icon={faCommentDots}
+                size='lg'
+                style={{ marginRight: "10px" }}
+              />
               Chat with Seller
             </button>
-            <button className='btn btn-primary' style={{ marginLeft: "10px" }}>
-              <BiPhoneCall style={{ marginRight: "8px" }} />
+            <button
+              className='btn btn-primary'
+              style={{ marginLeft: "10px" }}
+              onClick={() => {
+                auth?.user ? copyToClipboard() : message.error("Sign In First")
+              }}
+            >
+              <FontAwesomeIcon
+                icon={faPhone}
+                size='lg'
+                style={{ marginRight: "10px" }}
+              />
               Call Seller
             </button>
             <h3 style={{ marginTop: "10px" }}>Product Details</h3>

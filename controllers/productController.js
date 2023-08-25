@@ -14,7 +14,7 @@ const createProductController = async (req, res) => {
       address,
       seller,
     } = req.fields
-    const { image } = req.files
+    const { image1, image2, image3, image4 } = req.files
 
     //validation
 
@@ -25,10 +25,10 @@ const createProductController = async (req, res) => {
         return res.status(500).send({ error: "address is required" })
       case !seller:
         return res.status(500).send({ error: "seller is required" })
-      case !image || image.size > 1000000:
-        return res
-          .status(500)
-          .send({ error: "image is required and should be less than 1 mb" })
+      // case !image || image.size > 1000000:
+      //   return res
+      //     .status(500)
+      //     .send({ error: "image is required and should be less than 1 mb" })
       case !description:
         return res.status(500).send({ error: "description is required" })
       case !price:
@@ -38,10 +38,25 @@ const createProductController = async (req, res) => {
     }
 
     const products = new productModel({ ...req.fields, slug: slugify(name) })
-    if (image) {
-      products.image.data = fs.readFileSync(image.path)
-      products.image.contentType = image.type
+
+    if (image1) {
+      products.image1.data = fs.readFileSync(image1.path)
+      products.image1.contentType = image1.type
     }
+
+    if (image2) {
+      products.image2.data = fs.readFileSync(image2.path)
+      products.image2.contentType = image2.type
+    }
+    if (image3) {
+      products.image3.data = fs.readFileSync(image3.path)
+      products.image3.contentType = image3.type
+    }
+    if (image4) {
+      products.image4.data = fs.readFileSync(image4.path)
+      products.image4.contentType = image4.type
+    }
+
     await products.save()
     res.status(201).send({
       success: true,
@@ -63,7 +78,10 @@ const getAllProductController = async (req, res) => {
     const products = await productModel
       .find({})
       .populate("category")
-      .select("-image")
+      .select("-image1")
+      .select("-image2")
+      .select("-image3")
+      .select("-image4")
       .limit(12)
       .sort({ createdAt: -1 })
 
@@ -87,7 +105,10 @@ const getSingleProductController = async (req, res) => {
   try {
     const product = await productModel
       .findOne({ slug: req.params.slug })
-      .select("-image")
+      .select("-image1")
+      .select("-image2")
+      .select("-image3")
+      .select("-image4")
       .populate("category")
 
     res.status(200).send({
@@ -117,7 +138,7 @@ const updateProductController = async (req, res) => {
       address,
       seller,
     } = req.fields
-    const { image } = req.files
+    const { image1, image2, image3, image4 } = req.files
 
     //validation
 
@@ -148,10 +169,25 @@ const updateProductController = async (req, res) => {
       },
       { new: true }
     )
-    if (image) {
-      products.image.data = fs.readFileSync(image.path)
-      products.image.contentType = image.type
+
+    if (image1) {
+      products.image1.data = fs.readFileSync(image1.path)
+      products.image1.contentType = image1.type
     }
+
+    if (image2) {
+      products.image2.data = fs.readFileSync(image2.path)
+      products.image2.contentType = image2.type
+    }
+    if (image3) {
+      products.image3.data = fs.readFileSync(image3.path)
+      products.image3.contentType = image3.type
+    }
+    if (image4) {
+      products.image4.data = fs.readFileSync(image4.path)
+      products.image4.contentType = image4.type
+    }
+
     await products.save()
     res.status(201).send({
       success: true,
@@ -170,10 +206,43 @@ const updateProductController = async (req, res) => {
 
 const getProductImageController = async (req, res) => {
   try {
-    const product = await productModel.findById(req.params.pid).select("image")
-    if (product.image.data) {
-      res.set("Content-type", product.image.contentType)
-      return res.status(200).send(product.image.data)
+    const { imageid } = req.params
+
+    if (imageid === "1") {
+      const product = await productModel
+        .findById(req.params.pid)
+        .select("image1")
+      if (product.image1.data) {
+        res.set("Content-type", product.image1.contentType)
+        return res.status(200).send(product.image1.data)
+      }
+    }
+    if (imageid === "2") {
+      const product = await productModel
+        .findById(req.params.pid)
+        .select("image2")
+      if (product.image2.data) {
+        res.set("Content-type", product.image2.contentType)
+        return res.status(200).send(product.image2.data)
+      }
+    }
+    if (imageid === "3") {
+      const product = await productModel
+        .findById(req.params.pid)
+        .select("image3")
+      if (product.image3.data) {
+        res.set("Content-type", product.image3.contentType)
+        return res.status(200).send(product.image3.data)
+      }
+    }
+    if (imageid === "4") {
+      const product = await productModel
+        .findById(req.params.pid)
+        .select("image4")
+      if (product.image4.data) {
+        res.set("Content-type", product.image4.contentType)
+        return res.status(200).send(product.image4.data)
+      }
     }
   } catch (error) {
     console.log(error)
@@ -187,7 +256,12 @@ const getProductImageController = async (req, res) => {
 
 const deleteProductController = async (req, res) => {
   try {
-    await productModel.findByIdAndDelete(req.params.pid).select("-image")
+    await productModel
+      .findByIdAndDelete(req.params.pid)
+      .select("-image1")
+      .select("-image2")
+      .select("-image3")
+      .select("-image4")
     res.status(200).send({
       success: true,
       message: "Product Deleted Successfully",
@@ -250,7 +324,10 @@ const productListController = async (req, res) => {
     const page = req.params.page ? req.params.page : 1
     const products = await productModel
       .find({})
-      .select("-image")
+      .select("-image1")
+      .select("-image2")
+      .select("-image3")
+      .select("-image4")
       .skip((page - 1) * perPage)
       .limit(perPage)
       .sort({ createdAt: -1 })
@@ -277,7 +354,10 @@ const searchProductController = async (req, res) => {
       .find({
         $or: [{ name: { $regex: keyword, $options: "i" } }],
       })
-      .select("-image")
+      .select("-image1")
+      .select("-image2")
+      .select("-image3")
+      .select("-image4")
     res.json(results)
   } catch (error) {
     console.log(error)
@@ -298,7 +378,10 @@ const realtedProductController = async (req, res) => {
         category: cid,
         _id: { $ne: pid },
       })
-      .select("-image")
+      .select("-image1")
+      .select("-image2")
+      .select("-image3")
+      .select("-image4")
       .limit(3)
       .populate("category")
     res.status(200).send({

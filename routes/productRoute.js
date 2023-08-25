@@ -44,7 +44,7 @@ router.put(
 
 // get product photo
 
-router.get("/product-photo/:pid", getProductImageController)
+router.get("/product-photo/:pid/:imageid", getProductImageController)
 
 // delete product
 

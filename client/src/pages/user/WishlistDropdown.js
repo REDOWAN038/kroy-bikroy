@@ -13,14 +13,14 @@ const WishlistDropdown = ({ wishlistItems, removeFromWishlist }) => {
           onClick={() => navigate(`/product/${p.slug}`)}
         >
           <img
-            src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`}
+            src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}/1`}
             alt={p.name}
           />
           <div className='wishlist-name'>
-            {p.name.length <= 10 ? (
+            {p.name.length <= 18 ? (
               <p>{p.name}</p>
             ) : (
-              <p>{p.name.substring(0, 10)}...</p>
+              <p>{p.name.substring(0, 19)}...</p>
             )}
           </div>
           <div className='wishlist-price'>

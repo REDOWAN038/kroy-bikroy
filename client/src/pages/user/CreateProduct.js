@@ -20,7 +20,10 @@ const CreateProduct = () => {
   const [sellerName, setSellerName] = useState("")
   const [sellerId, setSellerId] = useState("")
   //const [available, setAvailable] = useState("")
-  const [image, setImage] = useState("")
+  const [image1, setImage1] = useState("")
+  const [image2, setImage2] = useState("")
+  const [image3, setImage3] = useState("")
+  const [image4, setImage4] = useState("")
 
   // fetching categories function
 
@@ -62,7 +65,10 @@ const CreateProduct = () => {
       productData.append("price", price)
       productData.append("category", category)
       productData.append("address", address)
-      productData.append("image", image)
+      image1 && productData.append("image1", image1)
+      image2 && productData.append("image2", image2)
+      image3 && productData.append("image3", image3)
+      image4 && productData.append("image4", image4)
       //productData.append("sellerName", sellerName)
       productData.append("seller", sellerId)
       console.log(typeof sellerId)
@@ -74,7 +80,7 @@ const CreateProduct = () => {
         productData
       )
 
-      if (res?.data.success) {
+      if (res?.data?.success) {
         //navigate("/dashboard/user/your-products")
         message.success("Item is added to sell")
         navigate("/dashboard/user/your-products")
@@ -155,32 +161,13 @@ const CreateProduct = () => {
                 />
               </div>
 
-              <div className='mb-5'>
-                <label className='btn btn-outline-secondary image-container'>
-                  {image ? (
-                    <img
-                      src={URL.createObjectURL(image)}
-                      alt='product_image'
-                      className='img img-responsive'
-                    />
-                  ) : (
-                    "Upload Image"
-                  )}
-                  <input
-                    type='file'
-                    name='image'
-                    accept='image/*'
-                    onChange={(e) => setImage(e.target.files[0])}
-                    hidden
-                    required
-                  />
-                </label>
-                {/* <div className='row'>
-                  <div className='col-md-4'>
+              <div className='row'>
+                <div className='col-md-3'>
+                  <div className='mb-5'>
                     <label className='btn btn-outline-secondary image-container'>
-                      {image ? (
+                      {image1 ? (
                         <img
-                          src={URL.createObjectURL(image)}
+                          src={URL.createObjectURL(image1)}
                           alt='product_image'
                           className='img img-responsive'
                         />
@@ -189,18 +176,21 @@ const CreateProduct = () => {
                       )}
                       <input
                         type='file'
-                        name='image'
+                        name='image1'
                         accept='image/*'
-                        onChange={(e) => setImage(e.target.files[0])}
+                        onChange={(e) => setImage1(e.target.files[0])}
                         hidden
+                        required
                       />
                     </label>
                   </div>
-                  <div className='col-md-4'>
+                </div>
+                <div className='col-md-3'>
+                  <div className='mb-5'>
                     <label className='btn btn-outline-secondary image-container'>
-                      {image ? (
+                      {image2 ? (
                         <img
-                          src={URL.createObjectURL(image)}
+                          src={URL.createObjectURL(image2)}
                           alt='product_image'
                           className='img img-responsive'
                         />
@@ -209,18 +199,21 @@ const CreateProduct = () => {
                       )}
                       <input
                         type='file'
-                        name='image'
+                        name='image2'
                         accept='image/*'
-                        onChange={(e) => setImage(e.target.files[0])}
+                        onChange={(e) => setImage2(e.target.files[0])}
                         hidden
+                        required
                       />
                     </label>
                   </div>
-                  <div className='col-md-4'>
+                </div>
+                <div className='col-md-3'>
+                  <div className='mb-5'>
                     <label className='btn btn-outline-secondary image-container'>
-                      {image ? (
+                      {image3 ? (
                         <img
-                          src={URL.createObjectURL(image)}
+                          src={URL.createObjectURL(image3)}
                           alt='product_image'
                           className='img img-responsive'
                         />
@@ -229,14 +222,38 @@ const CreateProduct = () => {
                       )}
                       <input
                         type='file'
-                        name='image'
+                        name='image3'
                         accept='image/*'
-                        onChange={(e) => setImage(e.target.files[0])}
+                        onChange={(e) => setImage3(e.target.files[0])}
                         hidden
+                        required
                       />
                     </label>
                   </div>
-                </div> */}
+                </div>
+                <div className='col-md-3'>
+                  <div className='mb-5'>
+                    <label className='btn btn-outline-secondary image-container'>
+                      {image4 ? (
+                        <img
+                          src={URL.createObjectURL(image4)}
+                          alt='product_image'
+                          className='img img-responsive'
+                        />
+                      ) : (
+                        "Upload Image"
+                      )}
+                      <input
+                        type='file'
+                        name='image4'
+                        accept='image/*'
+                        onChange={(e) => setImage4(e.target.files[0])}
+                        hidden
+                        required
+                      />
+                    </label>
+                  </div>
+                </div>
               </div>
               <div className='mb-3 text-center'>
                 <button className='btn btn-primary' onClick={handleCreate}>

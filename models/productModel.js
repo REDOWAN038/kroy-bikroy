@@ -28,7 +28,19 @@ const productSchema = new mongoose.Schema(
       ref: "users",
       required: true,
     },
-    image: {
+    image1: {
+      data: Buffer,
+      contentType: String,
+    },
+    image2: {
+      data: Buffer,
+      contentType: String,
+    },
+    image3: {
+      data: Buffer,
+      contentType: String,
+    },
+    image4: {
       data: Buffer,
       contentType: String,
     },

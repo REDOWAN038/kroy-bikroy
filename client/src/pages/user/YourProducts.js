@@ -107,7 +107,7 @@ const YourProducts = () => {
                   <div className='thumb-wrapper'>
                     <div className='img-box'>
                       <img
-                        src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`}
+                        src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}/1`}
                         className='img-fluid'
                         alt={p.name}
                       />
