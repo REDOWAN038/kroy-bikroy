@@ -1,4 +1,5 @@
 const categoryModel = require("../models/categoryModel")
+const productModel = require("../models/productModel")
 const slugify = require("slugify")
 
 const createCategoryController = async (req, res) => {
@@ -38,6 +39,7 @@ const updateCategoryController = async (req, res) => {
   try {
     const { name } = req.body
     const { id } = req.params
+    //await productModel.updateMany({ category: slugify(name) })
     const category = await categoryModel.findByIdAndUpdate(
       id,
       { name, slug: slugify(name) },
@@ -97,6 +99,7 @@ const getSingleCategoryController = async (req, res) => {
 const deleteCategoryController = async (req, res) => {
   try {
     const { id } = req.params
+    await productModel.deleteMany({ category: id })
     await categoryModel.findByIdAndDelete(id)
     res.status(200).send({
       success: true,

@@ -4,6 +4,7 @@ import AdminMenu from "../../components/Layout/AdminMenu"
 import axios from "axios"
 import CategoryForm from "../../components/Form/CategoryForm"
 import { Modal } from "antd"
+import { message } from "antd"
 
 const CreateCategory = () => {
   const [categories, setCategories] = useState([])
@@ -22,6 +23,7 @@ const CreateCategory = () => {
       )
 
       if (res.data.success) {
+        message.success(`${name} category created`)
         getAllCategories()
         setName("Enter New Category")
       }
@@ -40,6 +42,7 @@ const CreateCategory = () => {
       )
 
       if (res.data.success) {
+        message.success("Category Updated")
         setSelected(null)
         setUpdatedName("")
         setVisible(false)
@@ -52,13 +55,15 @@ const CreateCategory = () => {
 
   // delete function
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id, name) => {
     try {
       const res = await axios.delete(
         `${process.env.REACT_APP_API}/api/v1/category/delete-category/${id}`
       )
 
       if (res.data.success) {
+        message.success(`${name} category deleted`)
+
         getAllCategories()
       }
     } catch (error) {
@@ -127,7 +132,7 @@ const CreateCategory = () => {
                           </button>
                           <button
                             className='btn btn-danger ms-2'
-                            onClick={() => handleDelete(c._id)}
+                            onClick={() => handleDelete(c._id, c.name)}
                           >
                             Delete
                           </button>
