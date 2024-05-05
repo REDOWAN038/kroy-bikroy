@@ -110,13 +110,30 @@ const UpdateProduct = () => {
 
   const handleDelete = async () => {
     try {
-      let answer = window.prompt("are you sure?")
+      let answer = window.confirm("are you sure?")
       if (!answer) return
       const res = await axios.delete(
         `${process.env.REACT_APP_API}/api/v1/product/delete-product/${pid}`
       )
       if (res?.data?.success) {
         message.success("Product Deleted Successfully")
+        navigate("/dashboard/user/your-products")
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleSoldOut = async () => {
+    try {
+      let answer = window.confirm("are you sure?")
+      if (!answer) return
+
+      const res = await axios.delete(
+        `${process.env.REACT_APP_API}/api/v1/product/soldout-product/${pid}`
+      )
+      if (res?.data?.success) {
+        message.success("Product Sold Out")
         navigate("/dashboard/user/your-products")
       }
     } catch (error) {
@@ -313,6 +330,15 @@ const UpdateProduct = () => {
                     onClick={handleUpdate}
                   >
                     UPDATE
+                  </button>
+                </div>
+                <div className='mb-3 mr-10'>
+                  <button
+                    className='btn btn-warning'
+                    style={{ marginRight: "10px" }}
+                    onClick={handleSoldOut}
+                  >
+                    Sold Out
                   </button>
                 </div>
                 <div className='mb-3'>

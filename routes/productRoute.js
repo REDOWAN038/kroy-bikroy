@@ -12,6 +12,7 @@ const {
   productListController,
   searchProductController,
   realtedProductController,
+  soldOutProductController,
 } = require("../controllers/productController")
 const formidable = require("express-formidable")
 const router = express.Router()
@@ -49,6 +50,10 @@ router.get("/product-photo/:pid/:imageid", getProductImageController)
 // delete product
 
 router.delete("/delete-product/:pid", requireSignIn, deleteProductController)
+
+// sold out product
+
+router.delete("/soldout-product/:pid", requireSignIn, soldOutProductController)
 
 // filtering
 

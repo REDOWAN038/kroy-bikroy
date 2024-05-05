@@ -10,12 +10,12 @@ import { useAuth } from "../context/auth"
 import { message } from "antd"
 
 const Home = () => {
-  const { selectedCategoryId, setCategory } = useCategory()
+  const { selectedCategoryId, setCategory, selectedCategory } = useCategory()
   const [wishList, setWishList] = useWishList()
   const navigate = useNavigate()
   const [products, setProducts] = useState([])
   const [min, setMin] = useState("0")
-  const [max, setMax] = useState("100000")
+  const [max, setMax] = useState("1000000000000")
   const [filter, setFilter] = useState(false)
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
@@ -107,15 +107,31 @@ const Home = () => {
   const filterProducts = async () => {
     try {
       setLoading(true)
+      const queryParams = {}
+
+      if (min && max) {
+        queryParams.min = min
+        queryParams.max = max
+      }
+
+      if (selectedCategoryId) {
+        queryParams.category = selectedCategory
+      }
+
+      const params = new URLSearchParams(queryParams)
+
       const res = await axios.post(
-        `${process.env.REACT_APP_API}/api/v1/product/filter-products`,
-        { filter, min, max, selectedCategoryId }
+        `${
+          process.env.REACT_APP_API
+        }/api/v1/product/filter-products?${params.toString()}`,
+        { filter, selectedCategoryId }
       )
       setLoading(false)
 
       if (res?.data.success) {
         setProducts(res?.data.products)
         setTotal(products.length)
+        navigate(`/?${params.toString()}`)
       }
     } catch (error) {
       setLoading(false)

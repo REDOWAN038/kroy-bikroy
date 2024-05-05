@@ -23,8 +23,14 @@ const CreateCategory = () => {
       )
 
       if (res.data.success) {
-        message.success(`${name} category created`)
         getAllCategories()
+        setName("Enter New Category")
+        window.location.reload()
+        message.success(`${name} category created`)
+      }
+
+      if (res.status === 200) {
+        message.info("Already Available")
         setName("Enter New Category")
       }
     } catch (error) {
@@ -57,14 +63,19 @@ const CreateCategory = () => {
 
   const handleDelete = async (id, name) => {
     try {
+      const answer = window.confirm(
+        `are you sure you want to delete category ${name}? This action will delete all the products related to category ${name}`
+      )
+      if (!answer) return
+
       const res = await axios.delete(
         `${process.env.REACT_APP_API}/api/v1/category/delete-category/${id}`
       )
 
       if (res.data.success) {
         message.success(`${name} category deleted`)
-
         getAllCategories()
+        window.location.reload()
       }
     } catch (error) {
       console.log(error)

@@ -48,9 +48,10 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    available: {
-      type: Boolean,
-      default: true,
+    status: {
+      type: Number,
+      enum: [0, 1, 2], // 0 --> delete, 1-->available, 2-->sold out
+      default: 1,
     },
   },
   { timestamps: true }

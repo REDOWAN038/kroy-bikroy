@@ -4,16 +4,8 @@ const fs = require("fs")
 
 const createProductController = async (req, res) => {
   try {
-    const {
-      name,
-      slug,
-      description,
-      price,
-      category,
-      available,
-      address,
-      seller,
-    } = req.fields
+    const { name, slug, description, price, category, address, seller } =
+      req.fields
     const { image1, image2, image3, image4 } = req.files
 
     //validation
@@ -76,7 +68,7 @@ const createProductController = async (req, res) => {
 const getAllProductController = async (req, res) => {
   try {
     const products = await productModel
-      .find({})
+      .find({ status: 1 })
       .populate("category")
       .select("-image1")
       .select("-image2")
@@ -128,16 +120,8 @@ const getSingleProductController = async (req, res) => {
 
 const updateProductController = async (req, res) => {
   try {
-    const {
-      name,
-      slug,
-      description,
-      price,
-      category,
-      available,
-      address,
-      seller,
-    } = req.fields
+    const { name, slug, description, price, category, address, seller } =
+      req.fields
     const { image1, image2, image3, image4 } = req.files
 
     //validation
@@ -256,12 +240,15 @@ const getProductImageController = async (req, res) => {
 
 const deleteProductController = async (req, res) => {
   try {
-    await productModel
-      .findByIdAndDelete(req.params.pid)
-      .select("-image1")
-      .select("-image2")
-      .select("-image3")
-      .select("-image4")
+    await productModel.findByIdAndUpdate(
+      req.params.pid,
+      {
+        ...req.fields,
+        status: 0,
+      },
+      { new: true }
+    )
+
     res.status(200).send({
       success: true,
       message: "Product Deleted Successfully",
@@ -276,9 +263,35 @@ const deleteProductController = async (req, res) => {
   }
 }
 
+const soldOutProductController = async (req, res) => {
+  try {
+    await productModel.findByIdAndUpdate(
+      req.params.pid,
+      {
+        ...req.fields,
+        status: 2,
+      },
+      { new: true }
+    )
+
+    res.status(200).send({
+      success: true,
+      message: "Product Sold Out",
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).send({
+      success: false,
+      error,
+      message: "Error while deleting product",
+    })
+  }
+}
+
 const productFilterController = async (req, res) => {
   try {
-    const { filter, min, max, selectedCategoryId } = req.body
+    const { selectedCategoryId, filter } = req.body
+    const { min, max } = req.query
     let args = {}
     if (selectedCategoryId) {
       args.category = selectedCategoryId
@@ -323,7 +336,7 @@ const productListController = async (req, res) => {
     const perPage = 6
     const page = req.params.page ? req.params.page : 1
     const products = await productModel
-      .find({})
+      .find({ status: 1 })
       .select("-image1")
       .select("-image2")
       .select("-image3")
@@ -410,4 +423,5 @@ module.exports = {
   productListController,
   searchProductController,
   realtedProductController,
+  soldOutProductController,
 }

@@ -17,7 +17,7 @@ const SearchInput = () => {
         `${process.env.REACT_APP_API}/api/v1/product/search/${search.keyword}`
       )
       setSearch({ ...search, results: data })
-      navigate("/search")
+      navigate(`/search?product_name=${search.keyword}`)
     } catch (error) {
       console.log(error)
     }
