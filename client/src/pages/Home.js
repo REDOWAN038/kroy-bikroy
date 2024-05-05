@@ -121,8 +121,7 @@ const Home = () => {
       const params = new URLSearchParams(queryParams)
 
       const res = await axios.post(
-        `${
-          process.env.REACT_APP_API
+        `${process.env.REACT_APP_API
         }/api/v1/product/filter-products?${params.toString()}`,
         { filter, selectedCategoryId }
       )
@@ -154,7 +153,7 @@ const Home = () => {
   return (
     <Layout>
       <div className='row mt-3'>
-        <div className='col-md-3 mt-5'>
+        <div className='col-md-2 mt-5'>
           <div className='ms-3'>
             <h3 className='price-heading'>Price</h3>
             <div className='mt-3'>
@@ -201,7 +200,7 @@ const Home = () => {
             </div>
           </div>
         </div>
-        <div className='col-md-9'>
+        <div className='col-md-10'>
           <h1 className='text-center'>All Products</h1>
           <div className='carousel'>
             {products.map((p) => (

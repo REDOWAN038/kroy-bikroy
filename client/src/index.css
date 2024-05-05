@@ -733,7 +733,7 @@ form {
   z-index: 2;
 }
 
-/* hudai */
+/* item */
 .carousel {
   display: flex;
   flex-wrap: wrap;
@@ -747,7 +747,7 @@ form {
   text-align: center;
   overflow: hidden;
   margin: 20px;
-  width: 300px;
+  width: 220px;
   cursor: pointer;
 }
 .carousel .thumb-wrapper {
@@ -1001,4 +1001,18 @@ form {
   flex-direction: column;
   overflow-y: scroll;
   scrollbar-width: none;
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    width: 600px;
+  }
+  .form-container button {
+    padding: 8px 35px;
+  }
+
+  .category-section {
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
 }
