@@ -16,6 +16,7 @@ const Chatbox = () => {
       //w={"68%"}
       borderRadius='lg'
       borderWidth='1px'
+      className="chatbox"
     >
       <SingleChat />
     </Box>

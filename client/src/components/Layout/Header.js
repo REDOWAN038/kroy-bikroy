@@ -43,7 +43,7 @@ const Header = () => {
       )
 
       if (res?.data?.success) {
-        setWishList(res?.data?.updatedWishlist?.length)
+        setWishList(prev => prev - 1)
         getWishListItems()
         message.success(res?.data?.message)
       }
@@ -162,11 +162,10 @@ const Header = () => {
                   <>
                     <li>
                       <Link
-                        to={`/dashboard/${
-                          auth?.user?.role === 1
-                            ? "admin/create-category"
-                            : "user/profile"
-                        }`}
+                        to={`/dashboard/${auth?.user?.role === 1
+                          ? "admin/create-category"
+                          : "user/profile"
+                          }`}
                         className='option-link'
                       >
                         Dashboard

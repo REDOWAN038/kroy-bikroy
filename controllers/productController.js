@@ -199,6 +199,8 @@ const getProductImageController = async (req, res) => {
       if (product.image1.data) {
         res.set("Content-type", product.image1.contentType)
         return res.status(200).send(product.image1.data)
+      } else {
+        return res.status(200).send("")
       }
     }
     if (imageid === "2") {
@@ -208,6 +210,8 @@ const getProductImageController = async (req, res) => {
       if (product.image2.data) {
         res.set("Content-type", product.image2.contentType)
         return res.status(200).send(product.image2.data)
+      } else {
+        return res.status(200).send("")
       }
     }
     if (imageid === "3") {
@@ -217,6 +221,8 @@ const getProductImageController = async (req, res) => {
       if (product.image3.data) {
         res.set("Content-type", product.image3.contentType)
         return res.status(200).send(product.image3.data)
+      } else {
+        return res.status(200).send("")
       }
     }
     if (imageid === "4") {
@@ -226,6 +232,8 @@ const getProductImageController = async (req, res) => {
       if (product.image4.data) {
         res.set("Content-type", product.image4.contentType)
         return res.status(200).send(product.image4.data)
+      } else {
+        return res.status(200).send("")
       }
     }
   } catch (error) {
@@ -292,7 +300,7 @@ const productFilterController = async (req, res) => {
   try {
     const { selectedCategoryId, filter } = req.body
     const { min, max } = req.query
-    let args = {}
+    let args = { status: "1" }
     if (selectedCategoryId) {
       args.category = selectedCategoryId
     }
@@ -388,6 +396,7 @@ const realtedProductController = async (req, res) => {
     const { pid, cid } = req.params
     const products = await productModel
       .find({
+        status: "1",
         category: cid,
         _id: { $ne: pid },
       })

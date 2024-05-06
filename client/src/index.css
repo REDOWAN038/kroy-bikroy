@@ -506,7 +506,7 @@ form {
 /* image button */
 
 .image-container {
-  width: 220px; /* Set the width of the container */
+  width: 200px; /* Set the width of the container */
   height: 150px; /* Set the height of the container */
   overflow: hidden; /* Hide any overflow of the image */
   position: relative; /* Establish a positioning context for absolute positioning */
@@ -1002,6 +1002,10 @@ form {
   overflow-y: scroll;
   scrollbar-width: none;
 }
+
+/* .chatbox {
+  height: 550px;
+} */
 
 @media screen and (max-width: 768px) {
   .container {

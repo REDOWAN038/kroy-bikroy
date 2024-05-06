@@ -57,7 +57,6 @@ const ProductDetails = () => {
 
       if (res?.data?.success) {
         users.map((user) => {
-          console.log(user)
           if (user._id === sId) {
             //console.log("hurray")
             setSellerName(user.name)
@@ -90,24 +89,25 @@ const ProductDetails = () => {
     }
   }
 
-  const addToWishList = async (p) => {
-    let existingWishListItem = localStorage.getItem("wishlist")
-    existingWishListItem = JSON.parse(existingWishListItem)
+  const addToWishList = async (productId) => {
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_API}/api/v1/users/add-wishlist`,
+        { productId }
+      )
 
-    if (wishList.length === 0) {
-      setWishList([...wishList, p])
-      localStorage.setItem("wishlist", JSON.stringify([...wishList, p]))
-      message.success("Item Added to Wishlist")
-      return
-    }
+      if (res?.data?.success) {
+        const msg = res?.data?.message
+        if (msg === "Items Added to WishList") {
+          setWishList(wishList + 1)
+        }
 
-    if (wishList.includes(p)) {
-      message.warning("already in the wishlist")
-    } else {
-      setWishList([...wishList, p])
-      localStorage.setItem("wishlist", JSON.stringify([...wishList, p]))
-      message.success("Item Added to Wishlist")
-      //console.log(wishList)
+        message.success(msg)
+      } else {
+        console.log(res?.data?.message)
+      }
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -172,7 +172,7 @@ const ProductDetails = () => {
               <div className='product-small-img-col'>
                 <img
                   src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${product._id}/1`}
-                  alt='product_image_1'
+                  alt=' '
                   className='img-fluid'
                   onClick={() => setImageId("1")}
                 />
@@ -180,7 +180,7 @@ const ProductDetails = () => {
               <div className='product-small-img-col'>
                 <img
                   src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${product._id}/2`}
-                  alt='product_image_2'
+                  alt=' '
                   className='img-fluid'
                   onClick={() => setImageId("2")}
                 />
@@ -188,7 +188,7 @@ const ProductDetails = () => {
               <div className='product-small-img-col'>
                 <img
                   src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${product._id}/3`}
-                  alt='product_image_3'
+                  alt=' '
                   className='img-fluid'
                   onClick={() => setImageId("3")}
                 />
@@ -196,7 +196,7 @@ const ProductDetails = () => {
               <div className='product-small-img-col'>
                 <img
                   src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${product._id}/4`}
-                  alt='product_image_4'
+                  alt=' '
                   className='img-fluid'
                   onClick={() => setImageId("4")}
                 />
@@ -301,7 +301,7 @@ const ProductDetails = () => {
                     className='btn btn-primary'
                     onClick={() => {
                       if (auth.user) {
-                        addToWishList(p)
+                        addToWishList(p._id)
                       } else {
                         message.error("Please Login First")
                       }

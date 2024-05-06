@@ -15,6 +15,7 @@ const accessChat = async (req, res) => {
     let isChat = await chatModel
       .find({
         $and: [
+          { chatName: productName },
           { users: { $elemMatch: { $eq: req.user._id } } },
           { users: { $elemMatch: { $eq: userId } } },
         ],
